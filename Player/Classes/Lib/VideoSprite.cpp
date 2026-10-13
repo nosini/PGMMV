@@ -2,6 +2,7 @@
 #include "renderer/ccGLStateCache.h"
 #include "AudioEngine.h"
 #include "Manager/AudioManager.h"
+#include "vlc/libvlc_version.h"
 
 USING_NS_CC;
 using namespace experimental;
@@ -79,7 +80,12 @@ bool VideoSprite::initWithFilename(std::string filename, cocos2d::Size size, boo
 	}
 	_vlcPlayer = libvlc_media_player_new_from_media(media);
 	if (bLoop) {//ループ有り。
+#if LIBVLC_VERSION_INT >= LIBVLC_VERSION(3, 0, 0, 0)
+		// VLC 3 treats -1 as no repeat; 65535 is the largest count it accepts.
+		libvlc_media_add_option(media, "input-repeat=65535");
+#else
 		libvlc_media_add_option(media, "input-repeat=-1");
+#endif
 	}
 	libvlc_media_release(media);
 
