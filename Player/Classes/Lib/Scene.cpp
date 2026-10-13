@@ -3927,6 +3927,9 @@ void SceneLayer::end()
 #else
 			auto obj = dynamic_cast<agtk::Object *>(ref);
 #endif
+			// Timers retain their objects, whose scene-layer pointers are not retained.
+			// Stop them before a menu layer is destroyed.
+			_scene->removeObjectVariableTimer(obj);
 			bool bIgnoredReappearCondition = true;//※シーン終了での消滅後の復活条件は無視。
 			this->removeObject(obj, bIgnoredReappearCondition, false, false);
 		}
