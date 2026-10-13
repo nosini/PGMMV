@@ -2,6 +2,7 @@
  * @brief オブジェクトデータ
  */
 #include "ObjectData.h"
+#include "LegacyProjectSchema.h"
 #include "AssetData.h"
 #include "Data/SceneData.h"
 
@@ -251,9 +252,7 @@ bool ObjectInputConditionData::init(const rapidjson::Value& json)
 	CHECK_JSON_MENBER("useKey");
 	this->setUseKey(json["useKey"].GetBool());
 
-	//acceptFrameCount
-	CHECK_JSON_MENBER("acceptFrameCount");
-	this->setAcceptFrameCount(json["acceptFrameCount"].GetInt());
+	this->setAcceptFrameCount(legacy::inputBufferFrames(json));
 
 	return true;
 }
@@ -1885,7 +1884,7 @@ bool ObjectData::init(const rapidjson::Value& json)
 		this->setChildren(dic);
 		return true;
 	}
-	this->setGroup((EnumObjGroup)json["group"].GetInt());
+	this->setGroup((EnumObjGroup)legacy::objectGroup(json));
 	this->setAnimationId(json["animationId"].GetInt());
 	this->setOperatable(json["operatable"].GetBool());
 	this->setPriority(json["priority"].GetInt());
@@ -1893,9 +1892,11 @@ bool ObjectData::init(const rapidjson::Value& json)
 		this->setDispPriority(json["dispPriority"].GetInt());
 	}
 	this->setInitialActionId(json["initialActionId"].GetInt());
-	this->setHitObjectGroupBit(json["hitObjectGroupBit"].GetInt());
-	this->setCollideWithObjectGroupBit(json["collideWithObjectGroupBit"].GetInt());
-	this->setCollideWithTileGroupBit(json["collideWithTileGroupBit"].GetInt());
+	this->setHitObjectGroupBit(legacy::objectGroupBits(json, "hitObjectGroupBit",
+		"hitPlayerGroup", "hitEnemyGroup", 1 << kObjGroupPlayer, 1 << kObjGroupEnemy));
+	this->setCollideWithObjectGroupBit(legacy::objectGroupBits(json, "collideWithObjectGroupBit",
+		"collideWithPlayerGroup", "collideWithEnemyGroup", 1 << kObjGroupPlayer, 1 << kObjGroupEnemy));
+	this->setCollideWithTileGroupBit(legacy::tileGroupBits(json));
 	this->setInitialDisplayDirectionFlag(json["initialDisplayDirectionFlag"].GetBool());
 	this->setInitialDisplayDirection(json["initialDisplayDirection"].GetDouble());
 	auto actionList = cocos2d::__Dictionary::create();

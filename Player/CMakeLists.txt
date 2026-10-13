@@ -55,6 +55,15 @@ pkg_check_modules(SYSDEPS REQUIRED IMPORTED_TARGET
     glfw3 glew freetype2 fontconfig gtk+-3.0 libpng libjpeg libtiff-4 libwebp zlib
     libcurl sqlite3 openal vorbisfile vorbis ogg libmpg123 libvlc x11)
 
+include(CTest)
+if(BUILD_TESTING)
+    add_executable(pgmmv_schema_tests proj.linux/tests/LegacyProjectSchemaTest.cpp)
+    target_include_directories(pgmmv_schema_tests PRIVATE Classes ${EXTERNAL_DIR})
+    # The bundled RapidJSON needs the same GCC compatibility flag as the player.
+    target_compile_options(pgmmv_schema_tests PRIVATE -fpermissive)
+    add_test(NAME legacy_project_schema COMMAND pgmmv_schema_tests)
+endif()
+
 # Prebuilt static libraries shipped with cocos2d-x.
 function(pgmmv_prebuilt name path)
     add_library(${name} STATIC IMPORTED)
