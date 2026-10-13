@@ -57,6 +57,9 @@ bool VideoSprite::initWithFilename(std::string filename, cocos2d::Size size, boo
 	_vlc = libvlc_new(0, NULL);
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+	// Keep the slashes; match the file name case like Windows does.
+	filename = FileUtils::getInstance()->getSuitableFOpen(filename);
 #else
 	{
 		std::string from = "/";

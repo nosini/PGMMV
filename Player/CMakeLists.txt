@@ -226,3 +226,20 @@ target_precompile_headers(player PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/proj.linux/stdafx.h>)
 target_link_libraries(player PRIVATE pgmmv_jscocos2d Boost::headers rt)
 target_link_options(player PRIVATE -no-pie)
+
+# The player's own resources, for game folders that don't include them (editor
+# projects). The player looks in resources/ next to itself, then in
+# ../share/pgmmv-player (see proj.linux/main.cpp).
+set(PGMMV_PLAYER_RESOURCE_DIRS script plugins fonts img)
+foreach(dir IN LISTS PGMMV_PLAYER_RESOURCE_DIRS)
+    add_custom_command(TARGET player POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_SOURCE_DIR}/Resources/${dir} $<TARGET_FILE_DIR:player>/resources/${dir})
+endforeach()
+
+include(GNUInstallDirs)
+install(PROGRAMS $<TARGET_FILE:player> DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME pgmmv-player)
+foreach(dir IN LISTS PGMMV_PLAYER_RESOURCE_DIRS)
+    install(DIRECTORY Resources/${dir} DESTINATION ${CMAKE_INSTALL_DATADIR}/pgmmv-player)
+endforeach()
+install(FILES Resources/credits.html DESTINATION ${CMAKE_INSTALL_DATADIR}/pgmmv-player)

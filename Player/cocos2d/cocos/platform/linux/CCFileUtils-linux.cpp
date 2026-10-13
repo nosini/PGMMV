@@ -40,6 +40,8 @@ THE SOFTWARE.
 #include <dirent.h>
 #include <strings.h>
 #include <algorithm>
+#include <mutex>
+#include <unordered_map>
 #endif
 
 #ifndef CC_RESOURCE_FOLDER_LINUX
@@ -164,6 +166,7 @@ std::vector<std::string> FileUtilsLinux::getDirContents(std::string dirname)
 {
     // Regular files only, in the case-insensitive order Windows lists them in.
     std::vector<std::string> list;
+    dirname = resolvePathCase(dirname);
     DIR* dir = opendir(dirname.c_str());
     if (dir == nullptr) {
         return list;
@@ -193,6 +196,120 @@ void FileUtilsLinux::memFclose(FILE* fp, int p[2])
     (void)p;
     fclose(fp);
 }
+
+namespace {
+
+// Directory listings used by resolvePathCase, keyed by directory path and reread when the
+// directory's modification time changes. Textures load on several threads, hence the mutex.
+struct DirListing
+{
+    bool valid = false;
+    struct timespec mtime = {};
+    std::vector<std::string> names; // sorted case-insensitively, so ties resolve the same way
+};
+std::mutex s_dirListingMutex;
+std::unordered_map<std::string, DirListing> s_dirListings;
+
+// Returns the entry of dir that equals name ignoring ASCII case, or "" if there is none.
+std::string findNameIgnoringCase(const std::string& dir, const std::string& name)
+{
+    struct stat st;
+    if (stat(dir.c_str(), &st) != 0 || !S_ISDIR(st.st_mode)) {
+        return "";
+    }
+    std::lock_guard<std::mutex> lock(s_dirListingMutex);
+    DirListing& listing = s_dirListings[dir];
+    if (!listing.valid || listing.mtime.tv_sec != st.st_mtim.tv_sec || listing.mtime.tv_nsec != st.st_mtim.tv_nsec) {
+        listing.names.clear();
+        if (DIR* d = opendir(dir.c_str())) {
+            while (struct dirent* entry = readdir(d)) {
+                if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+                    listing.names.push_back(entry->d_name);
+                }
+            }
+            closedir(d);
+        }
+        std::sort(listing.names.begin(), listing.names.end());
+        listing.valid = true;
+        listing.mtime = st.st_mtim;
+    }
+    for (const auto& entry : listing.names) {
+        if (strcasecmp(entry.c_str(), name.c_str()) == 0) {
+            return entry;
+        }
+    }
+    return "";
+}
+
+} // namespace
+
+std::string FileUtilsLinux::resolvePathCase(const std::string& path)
+{
+    struct stat st;
+    if (path.empty() || stat(path.c_str(), &st) == 0) {
+        return path;
+    }
+    std::string normalized = path;
+    std::replace(normalized.begin(), normalized.end(), '\\', '/');
+
+    // result always ends with '/' (or is empty) before the next component is added.
+    std::string result;
+    size_t pos = 0;
+    if (normalized[0] == '/') {
+        result = "/";
+        pos = 1;
+    }
+    bool resolving = true;
+    while (pos <= normalized.size()) {
+        size_t end = normalized.find('/', pos);
+        if (end == std::string::npos) {
+            end = normalized.size();
+        }
+        std::string part = normalized.substr(pos, end - pos);
+        if (!part.empty()) {
+            std::string candidate = result + part;
+            if (resolving && part != "." && part != ".." && lstat(candidate.c_str(), &st) != 0) {
+                std::string match = findNameIgnoringCase(result.empty() ? "." : result, part);
+                if (match.empty()) {
+                    resolving = false; // keep the rest as given
+                } else {
+                    candidate = result + match;
+                }
+            }
+            result = candidate;
+        }
+        if (end < normalized.size()) {
+            result += '/';
+        }
+        pos = end + 1;
+    }
+    return result;
+}
+
+std::string FileUtilsLinux::getSuitableFOpen(const std::string& filenameUtf8) const
+{
+    return resolvePathCase(filenameUtf8);
+}
+
+long FileUtilsLinux::getFileSize(const std::string &filepath) const
+{
+    std::string fullpath = isAbsolutePath(filepath) ? filepath : fullPathForFilename(filepath);
+    if (fullpath.empty()) {
+        return 0;
+    }
+    return FileUtils::getFileSize(resolvePathCase(fullpath));
+}
+
+time_t FileUtilsLinux::getLastWriteTime(const std::string &filename)
+{
+    return FileUtils::getLastWriteTime(resolvePathCase(fullPathForFilename(filename)));
+}
+
+bool FileUtilsLinux::isDirectoryExistInternal(const std::string& dirPath) const
+{
+    struct stat st;
+    return stat(resolvePathCase(dirPath).c_str(), &st) == 0 && S_ISDIR(st.st_mode);
+}
 #endif
 
 bool FileUtilsLinux::isFileExistInternal(const std::string& strFilePath) const
@@ -210,6 +327,9 @@ bool FileUtilsLinux::isFileExistInternal(const std::string& strFilePath) const
     }
 
     struct stat sts;
+#ifdef USE_AGTK
+    strPath = resolvePathCase(strPath);
+#endif
     return (stat(strPath.c_str(), &sts) == 0) && S_ISREG(sts.st_mode);
 }
 

@@ -65,9 +65,23 @@ public:
     virtual std::vector<std::string> getDirContents(std::string dirname) override;
     virtual FILE* memFopen(const char* ptr, size_t sz, int p[2]) override;
     virtual void memFclose(FILE* fp, int p[2]) override;
+
+    /**
+     * Returns path unchanged if it exists. Otherwise matches each component ignoring
+     * case and accepts backslashes as separators, like file lookups on Windows, which game
+     * data relies on. Components that cannot be found are kept as given, so the result
+     * also works for files that are about to be created.
+     */
+    static std::string resolvePathCase(const std::string& path);
+    virtual std::string getSuitableFOpen(const std::string& filenameUtf8) const override;
+    virtual long getFileSize(const std::string &filepath) const override;
+    virtual time_t getLastWriteTime(const std::string &filename) override;
 #endif
 private:
     virtual bool isFileExistInternal(const std::string& strFilePath) const override;
+#ifdef USE_AGTK
+    virtual bool isDirectoryExistInternal(const std::string& dirPath) const override;
+#endif
 };
 
 // end of platform group

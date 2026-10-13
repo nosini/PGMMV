@@ -16,6 +16,11 @@ public:
 	// UI language as the Windows player picks it from GetUserDefaultUILanguage():
 	// "ja_JP", "zh_CN" or "en_US".
 	static std::string getUiLocale();
+
+	// Folder with the player's own resources (script/, plugins/, fonts/, img/), searched
+	// after the game folder so that game folders without them work too. Empty if none.
+	static void setPlayerResourcePath(const std::string &path);
+	static const std::string &getPlayerResourcePath();
 };
 
 #endif // __LINUX_PLATFORM_H__

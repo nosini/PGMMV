@@ -4,6 +4,7 @@
 #include <cstring>
 
 static std::vector<std::string> s_arguments;
+static std::string s_playerResourcePath;
 
 void LinuxPlatform::setArguments(const std::vector<std::string> &args)
 {
@@ -13,6 +14,16 @@ void LinuxPlatform::setArguments(const std::vector<std::string> &args)
 const std::vector<std::string> &LinuxPlatform::getArguments()
 {
 	return s_arguments;
+}
+
+void LinuxPlatform::setPlayerResourcePath(const std::string &path)
+{
+	s_playerResourcePath = path;
+}
+
+const std::string &LinuxPlatform::getPlayerResourcePath()
+{
+	return s_playerResourcePath;
 }
 
 std::string LinuxPlatform::getUiLocale()
