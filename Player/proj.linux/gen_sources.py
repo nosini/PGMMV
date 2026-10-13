@@ -40,6 +40,7 @@ ADDED = {
         'proj.linux/main.cpp',
         'proj.linux/LinuxPlatform.cpp',
         'proj.linux/DllPluginManager-linux.cpp',
+        'proj.linux/LibVlcLoader.cpp',
     ],
     'PGMMV_COCOS_SOURCES': [
         'proj.linux/engine/SimpleAudioEngine-linux.cpp',

@@ -53,7 +53,9 @@ find_package(OpenSSL REQUIRED)
 find_package(Boost REQUIRED)
 pkg_check_modules(SYSDEPS REQUIRED IMPORTED_TARGET
     glfw3 glew freetype2 fontconfig gtk+-3.0 libpng libjpeg libtiff-4 libwebp zlib
-    libcurl sqlite3 openal vorbisfile vorbis ogg libmpg123 libvlc x11)
+    libcurl sqlite3 openal vorbisfile vorbis ogg libmpg123 x11)
+# Only libvlc's headers: proj.linux/LibVlcLoader.cpp loads the library itself.
+pkg_check_modules(LIBVLC REQUIRED libvlc)
 
 include(CTest)
 if(BUILD_TESTING)
@@ -233,7 +235,8 @@ target_compile_definitions(player PRIVATE ${PGMMV_PLAYER_DEFINITIONS} AGTKPLAYER
 # The Windows project force-includes stdafx.h into every C++ file.
 target_precompile_headers(player PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/proj.linux/stdafx.h>)
-target_link_libraries(player PRIVATE pgmmv_jscocos2d Boost::headers rt)
+target_include_directories(player PRIVATE ${LIBVLC_INCLUDE_DIRS})
+target_link_libraries(player PRIVATE pgmmv_jscocos2d Boost::headers rt ${CMAKE_DL_LIBS})
 target_link_options(player PRIVATE -no-pie)
 
 # The player's own resources, for game folders that don't include them (editor
