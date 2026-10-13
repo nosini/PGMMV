@@ -81,6 +81,11 @@ AppDelegate::~AppDelegate()
 {
 	// ゲームマネージャをパージ
 	auto gm = GameManager::getInstance();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+	// Startup may fail before a project is loaded. Purge would construct
+	// managers whose initialization requires that project.
+	if (!gm->getProjectData()) return;
+#endif
 	if (gm) {
 		gm->purge();
 	}
@@ -397,12 +402,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	auto jsonData = FileUtils::getInstance()->getStringFromFile(projectFilePath.substr(0, index) + "/info.json");
 	rapidjson::Document doc;
 	doc.Parse(jsonData.c_str());
-	bool error = doc.HasParseError();
+	bool error = doc.HasParseError() || !doc.IsObject();
 	if (error) {
 		CCASSERT(0, "Error: Json Parse.");
 	}
 	else {
-		if (doc.HasMember("projectFolderSave") && doc["projectFolderSave"].GetBool()) {
+		if (doc.HasMember("projectFolderSave") && doc["projectFolderSave"].IsBool()
+			&& doc["projectFolderSave"].GetBool()) {
 			GameManager::getInstance()->setProjectFolderSave(true);
 		}
 	}

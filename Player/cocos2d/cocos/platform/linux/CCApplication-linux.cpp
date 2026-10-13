@@ -69,7 +69,7 @@ int Application::run()
     // Initialize instance and cocos2d.
     if (! applicationDidFinishLaunching())
     {
-        return 0;
+        return 1;
     }
 
     long lastTime = 0L;
