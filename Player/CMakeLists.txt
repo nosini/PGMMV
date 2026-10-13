@@ -54,6 +54,9 @@ find_package(Boost REQUIRED)
 pkg_check_modules(SYSDEPS REQUIRED IMPORTED_TARGET
     glfw3 glew freetype2 fontconfig gtk+-3.0 libpng libjpeg libtiff-4 libwebp zlib
     libcurl sqlite3 openal vorbisfile vorbis ogg libmpg123 x11)
+# cocos2d includes WebP's headers without the webp/ prefix. Newer libwebp adds
+# that directory to its Cflags, older versions (Debian 12) don't.
+pkg_get_variable(WEBP_INCLUDEDIR libwebp includedir)
 # Only libvlc's headers: proj.linux/LibVlcLoader.cpp loads the library itself.
 pkg_check_modules(LIBVLC REQUIRED libvlc)
 
@@ -144,6 +147,7 @@ set(PGMMV_COMPILE_OPTIONS
 
 set(ENGINE_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/proj.linux/include
+    ${WEBP_INCLUDEDIR}/webp
     ${ENGINE_DIR}
     ${ENGINE_DIR}/cocos
     ${ENGINE_DIR}/cocos/editor-support

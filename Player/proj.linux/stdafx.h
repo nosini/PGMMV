@@ -4,6 +4,7 @@
 #define __STDAFX_H__
 
 #include <cstdint>
+#include "cmath-compat.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>

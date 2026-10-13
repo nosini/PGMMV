@@ -351,7 +351,7 @@ public:
 		return *this;
 	}
 protected:
-	std::mutex m_mutex;
+	mutable std::mutex m_mutex;
 	T *m_array;
 	T *m_lastArray;
 	size_t m_size;
