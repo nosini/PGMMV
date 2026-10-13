@@ -125,7 +125,7 @@ bool js_databases_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -263,7 +263,7 @@ bool js_databases_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -351,7 +351,7 @@ bool js_database_getColumnByIndex(JSContext *cx, unsigned argc, JS::Value *vp) {
 
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isNumber()) {
@@ -404,7 +404,7 @@ bool js_database_getColumnByName(JSContext *cx, unsigned argc, JS::Value *vp) {
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -467,7 +467,7 @@ bool js_database_getRowByIndex(JSContext *cx, unsigned argc, JS::Value *vp) {
 
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isNumber()) {
@@ -521,7 +521,7 @@ bool js_database_getRowByName(JSContext *cx, unsigned argc, JS::Value *vp) {
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -584,7 +584,7 @@ bool js_database_getFieldByIndex(JSContext *cx, unsigned argc, JS::Value *vp) {
 
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isNumber()) {
@@ -594,7 +594,7 @@ bool js_database_getFieldByIndex(JSContext *cx, unsigned argc, JS::Value *vp) {
 
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v3 = args[1];
+	auto v3 = args[1];
 #else
 #endif
 	if (!v3.isNumber()) {

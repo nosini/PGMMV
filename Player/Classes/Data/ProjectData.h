@@ -859,6 +859,8 @@ public:
 	static bool isHexNumber(const char *str, int *pNum);
 	static std::vector<std::string> stringSplit(const std::string &text, char delimiter);
 	std::string getExpandedText(const char *locale, const std::string &text, std::list<int> &textIdList);
+	// Callers pass temporary lists, which MSVC binds to the reference above.
+	std::string getExpandedText(const char *locale, const std::string &text, std::list<int> &&textIdList) { return getExpandedText(locale, text, textIdList); }
 #ifdef USE_PREVIEW
 	void setObjectData(int id, const rapidjson::Value& json);
 	void setSceneData(int id, const rapidjson::Value& json);

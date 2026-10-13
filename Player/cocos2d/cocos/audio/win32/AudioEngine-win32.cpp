@@ -26,7 +26,7 @@
 
 #include "platform/CCPlatformConfig.h"
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
 
 #include "audio/win32/AudioEngine-win32.h"
 
@@ -43,7 +43,9 @@
 #include "platform/CCFileUtils.h"
 #include "audio/win32/AudioDecoderManager.h"
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include <windows.h>
+#endif
 
 // log, CCLOG aren't threadsafe, since we uses sub threads for parsing pcm data, threadsafe log output
 // is needed. Define the following macros (ALOGV, ALOGD, ALOGI, ALOGW, ALOGE) for threadsafe log output.
@@ -75,6 +77,9 @@ static void _winLog(const char *format, va_list args)
 
     strcat(buf, "\n");
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
+    fputs(buf, stderr);
+#else
     int pos = 0;
     int len = strlen(buf);
     char tempBuf[MAX_LOG_LENGTH + 1] = { 0 };
@@ -92,6 +97,7 @@ static void _winLog(const char *format, va_list args)
         pos += MAX_LOG_LENGTH;
 
     } while (pos < len);
+#endif
 
     delete[] buf;
 }
@@ -897,7 +903,13 @@ bool AudioEngineImpl::checkChangeDevice()
 
 int AudioEngineImpl::getDeviceCount()
 {
+#if CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
+	std::vector<std::string> deviceNameList;
+	getDeviceNameList(deviceNameList);
+	return (int)deviceNameList.size();
+#else
 	return ::waveOutGetNumDevs();
+#endif
 }
 
 bool AudioEngineImpl::getDeviceNameList(std::vector<std::string> &deviceNameList)

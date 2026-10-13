@@ -96,7 +96,7 @@ bool js_sceneInstances_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	if (len < 1) {
 		return false;
 	}
-	auto &v = args[0];
+	auto v = args[0];
 	if (!v.isNumber()) {
 		return false;
 	}
@@ -189,7 +189,7 @@ bool js_sceneInstances_getCurrent(JSContext *cx, unsigned argc, JS::Value *vp)
 	if (len < 1) {
 		return false;
 	}
-	auto &v = args[0];
+	auto v = args[0];
 	if (!v.isNumber()) {
 		return false;
 	}
@@ -285,7 +285,7 @@ bool js_sceneInstance_getLayerByIndex(JSContext *cx, unsigned argc, JS::Value *v
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isInt32()) {
@@ -330,7 +330,7 @@ bool js_sceneInstance_getMenuLayerById(JSContext *cx, unsigned argc, JS::Value *
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isInt32()) {
@@ -469,7 +469,7 @@ bool js_sceneInstances_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 	std::string sceneInstanceName;
 	{
-		auto &v2 = args[0];
+		auto v2 = args[0];
 		if (!v2.isString()) {
 			return false;
 		}
@@ -529,7 +529,7 @@ bool js_sceneInstance_setValue(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 	bool value = 0;
 	{
-		auto &v2 = args[0];
+		auto v2 = args[0];
 		if (v2.isBoolean()) {
 			value = v2.toBoolean();
 		} else if (v2.isInt32()) {

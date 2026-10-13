@@ -236,12 +236,12 @@ static __TYPE__* create(__PARAMTYPE__ __PARAM__, __PARAMTYPE2__ __PARAM2__, __PA
 // デバッグログ
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-#define DBGMGR_ADDLOG(s, ...)				DebugManager::getInstance()->getDebugExecuteLogWindow()->addLog(s, __VA_ARGS__)
-#define AGTK_ACTION_LOG(flag, s, ...)		GameManager::actionLog(flag, s, __VA_ARGS__);//action_log.txtへ出力
-#define AGTK_LOG(s, ...)					GameManager::debugLog(s, __VA_ARGS__)//agtk_log.txtへ出力 
+#define DBGMGR_ADDLOG(s, ...)				DebugManager::getInstance()->getDebugExecuteLogWindow()->addLog(s, ##__VA_ARGS__)
+#define AGTK_ACTION_LOG(flag, s, ...)		GameManager::actionLog(flag, s, ##__VA_ARGS__);//action_log.txtへ出力
+#define AGTK_LOG(s, ...)					GameManager::debugLog(s, ##__VA_ARGS__)//agtk_log.txtへ出力 
 #if defined(USE_AGTK_DEBUG_LOG)
-#define AGTK_DEBUG_LOG(s, ...)				GameManager::debugLog(s, __VA_ARGS__)//agtk_log.txtへ出力 
-#define AGTK_DEBUG_ACTION_LOG(s, ...)		GameManager::actionLog(1, s, __VA_ARGS__);//action_log.txtへ出力
+#define AGTK_DEBUG_LOG(s, ...)				GameManager::debugLog(s, ##__VA_ARGS__)//agtk_log.txtへ出力 
+#define AGTK_DEBUG_ACTION_LOG(s, ...)		GameManager::actionLog(1, s, ##__VA_ARGS__);//action_log.txtへ出力
 #else
 #define AGTK_DEBUG_LOG(s, ...)				do {} while (0)
 #define AGTK_DEBUG_ACTION_LOG(s, ...)		do {} while (0)
@@ -249,7 +249,9 @@ static __TYPE__* create(__PARAMTYPE__ __PARAM__, __PARAMTYPE2__ __PARAM2__, __PA
 #else
 #endif
 
-#ifdef AGTKPLAYER_EXPORTS
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#define AGTKPLAYER_API
+#elif defined(AGTKPLAYER_EXPORTS)
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
 #define AGTKPLAYER_API __declspec(dllexport)

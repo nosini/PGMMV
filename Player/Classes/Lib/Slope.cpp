@@ -698,7 +698,7 @@ bool Slope::checkHit(Rect crntRect, Rect oldRect, Vec2& moveVec, bool touched, b
 		//タイルにぶつかっているかチェック。
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		std::function<bool(std::vector<agtk::Tile *>, cocos2d::Vec2)> checkColliedTile = [](std::vector<agtk::Tile *> &tileList, cocos2d::Vec2 v) {
+		std::function<bool(std::vector<agtk::Tile *>, cocos2d::Vec2)> checkColliedTile = [](const std::vector<agtk::Tile *> &tileList, cocos2d::Vec2 v) {
 #else
 #endif
 #ifdef USE_MULTITHREAD_OBJECT_UPDATE
@@ -1855,7 +1855,7 @@ cocos2d::Vec2 Slope::calcMovePosition(float moveX, float moveY, Vec2& startPos, 
 	return result;
 }
 
-bool Slope::checkUpSide(Vec2& targetPos)
+bool Slope::checkUpSide(const Vec2& targetPos)
 {
 	// 事前にupdateWorldSpaceRect関数を呼び出し
 	// ワールド空間での坂の情報を更新しておく必要がある

@@ -142,7 +142,7 @@ bool CollisionUtils::cross(CollisionLine *one, CollisionLine *two) {
 * @param	checkInverseNormal	壁線分の法線チェックを行うか？
 * @return						True:衝突 / false:衝突していない
 */
-bool CollisionUtils::checkCircleHitSegmentAndGetIntersectionAndReflection(std::vector<CollisionLine>& wallList, CollisionLine* objLine, int wallBit, float size, float repulsion, const cocos2d::Vec2* speed, cocos2d::Vec2* crossPos, cocos2d::Vec2* reflection, bool checkInverseNormal/* = true */)
+bool CollisionUtils::checkCircleHitSegmentAndGetIntersectionAndReflection(const std::vector<CollisionLine>& wallList, CollisionLine* objLine, int wallBit, float size, float repulsion, const cocos2d::Vec2* speed, cocos2d::Vec2* crossPos, cocos2d::Vec2* reflection, bool checkInverseNormal/* = true */)
 {
 	bool isHit = false;
 

@@ -40,8 +40,8 @@ THE SOFTWARE.
 #include "base/ccUTF8.h"
 #include "2d/CCCamera.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw.h"
 
 #ifdef USE_AGTK
 #include "json/stringbuffer.h"
@@ -672,6 +672,8 @@ bool IMGUIGLViewImpl::initWithFullScreen(const std::string& viewName)
         return false;
 
     const GLFWvidmode* videoMode = glfwGetVideoMode(_monitor);
+    if (nullptr == videoMode)
+        return false;
     return initWithRect(viewName, Rect(0, 0, videoMode->width, videoMode->height), 1.0f, false);
 }
 
@@ -834,7 +836,11 @@ bool IMGUIGLViewImpl::setFullScreen(bool fullScreen, int width, int height)
 
 	if (fullScreen)
 	{
-		const GLFWvidmode* videoMode = glfwGetVideoMode(monitor);
+		const GLFWvidmode* videoMode = monitor ? glfwGetVideoMode(monitor) : nullptr;
+		if (videoMode == nullptr)
+		{
+			return bFullScreen;
+		}
 		_fullScreen.refreshRate = videoMode->refreshRate;
 		glfwGetWindowPos(window, &_fullScreen.xpos, &_fullScreen.ypos);
 		glfwGetWindowSize(window, &_fullScreen.width, &_fullScreen.height);
@@ -872,6 +878,13 @@ GLFWmonitor *IMGUIGLViewImpl::getCurrentMonitor()
 {
 	GLFWwindow *window = this->getWindow();
 	GLFWmonitor *monitor = glfwGetWindowMonitor(window);
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+	// Wayland does not report window positions, so the search below would always pick
+	// the monitor at (0, 0). Use the primary monitor instead.
+	if (monitor == nullptr && glfwGetPlatform() == GLFW_PLATFORM_WAYLAND) {
+		monitor = glfwGetPrimaryMonitor();
+	}
+#endif
 	if (monitor == nullptr) {
 		int xposWin = 0;
 		int yposWin = 0;
@@ -1015,8 +1028,29 @@ void IMGUIGLViewImpl::setFrameSizeAndZoomFactor(float width, float height, float
 }
 #endif
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+// Framebuffer pixels per window unit that _retinaFactor does not cover. Wayland
+// compositors with fractional scaling (e.g. 1.5) give a framebuffer larger than
+// the window; the retina handling only covers exactly 2x.
+float IMGUIGLViewImpl::getFramebufferScale() const
+{
+    int w = 0, h = 0, fbW = 0, fbH = 0;
+    glfwGetWindowSize(_mainWindow, &w, &h);
+    glfwGetFramebufferSize(_mainWindow, &fbW, &fbH);
+    if (w <= 0 || fbW <= 0)
+    {
+        return 1.0f;
+    }
+    return (float)fbW / (w * _retinaFactor);
+}
+#endif
+
 void IMGUIGLViewImpl::setViewPortInPoints(float x , float y , float w , float h)
 {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    // Shadows the member so the point-to-pixel math below includes the framebuffer scale.
+    const float _frameZoomFactor = this->_frameZoomFactor * getFramebufferScale();
+#endif
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_NX) // #AGTK-NX
     experimental::Viewport vp((float)(x * _scaleX * _retinaFactor * _frameZoomFactor + _viewPortRect.origin.x * _retinaFactor * _frameZoomFactor),
         (float)(y * _scaleY * _retinaFactor  * _frameZoomFactor + _viewPortRect.origin.y * _retinaFactor * _frameZoomFactor),
@@ -1032,6 +1066,10 @@ void IMGUIGLViewImpl::setScissorInPoints(float x , float y , float w , float h)
 #ifdef USE_AGTK	//Windowサイズがぴったり等倍になっていないとクリップされる領域がずれてしまうのを修正。
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+	// See setViewPortInPoints.
+	const float _frameZoomFactor = this->_frameZoomFactor * getFramebufferScale();
+#endif
 
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_NX) // #AGTK-NX
 	// レンダーありとレンダーなしではclipping位置が変わる
@@ -1062,6 +1100,10 @@ Rect IMGUIGLViewImpl::getScissorRect() const
 {
     GLfloat params[4];
     glGetFloatv(GL_SCISSOR_BOX, params);
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    // See setViewPortInPoints.
+    const float _frameZoomFactor = this->_frameZoomFactor * getFramebufferScale();
+#endif
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_NX)
     float x = (params[0] - _viewPortRect.origin.x * _retinaFactor * _frameZoomFactor) / (_scaleX * _retinaFactor * _frameZoomFactor);
@@ -1084,6 +1126,10 @@ void IMGUIGLViewImpl::onGLFWError(int errorID, const char* errorDesc)
         _glfwError.append(StringUtils::format("GLFWError #%d Happen, %s\n", errorID, errorDesc));
     }
     CCLOGERROR("%s", _glfwError.c_str());
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    // CCLOGERROR prints nothing in release builds.
+    fprintf(stderr, "GLFW error 0x%x: %s\n", errorID, errorDesc);
+#endif
 }
 
 void IMGUIGLViewImpl::onGLFWMouseCallBack(GLFWwindow* window, int button, int action, int modify)
@@ -1347,7 +1393,12 @@ float IMGUIGLViewImpl::adjustWindowSizeAndZoomScale(int *pWidth, int *pHeight)
 	if (monitor == nullptr) {
 		monitor = glfwGetPrimaryMonitor();
 	}
-	auto videoMode = glfwGetVideoMode(monitor);
+	auto videoMode = monitor ? glfwGetVideoMode(monitor) : nullptr;
+	// No monitor or video mode (e.g. GLFW failed to initialize): don't limit the size.
+	GLFWvidmode noLimit = { INT_MAX, INT_MAX, 0, 0, 0, 0 };
+	if (videoMode == nullptr) {
+		videoMode = &noLimit;
+	}
 	auto newWidth = width;
 	auto newHeight = height;
 	//_resolutionPolicy == ResolutionPolicy::SHOW_ALL以外には未対応。
@@ -1481,6 +1532,15 @@ bool IMGUIGLViewImpl::initGlew()
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_MAC) && (CC_TARGET_PLATFORM != CC_PLATFORM_NX)
     GLenum GlewInitResult = glewInit();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    // GLFW creates EGL contexts on Wayland, where a GLX build of GLEW has no
+    // GLX display. The GL functions are loaded by then;
+    // only the GLX extensions are missing.
+    if (GlewInitResult == GLEW_ERROR_NO_GLX_DISPLAY)
+    {
+        GlewInitResult = GLEW_OK;
+    }
+#endif
     if (GLEW_OK != GlewInitResult)
     {
         MessageBox((char *)glewGetErrorString(GlewInitResult), "OpenGL error");

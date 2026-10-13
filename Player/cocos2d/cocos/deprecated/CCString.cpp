@@ -75,15 +75,20 @@ bool __String::initWithFormatAndValist(const char* format, va_list ap)
     {
 #ifdef USE_AGTK
 		//¶¬‚³‚ê‚é•¶Žš—ñ‚ªØ‚èŽÌ‚Ä‚ç‚ê‚È‚¢‚æ‚¤‚É‚·‚éB
+		// Keep a copy for the second pass: vsnprintf consumes ap on x86-64 Linux.
+		va_list apRetry;
+		va_copy(apRetry, ap);
 		auto expectedLen = vsnprintf(pBuf, kMaxStringLen, format, ap);
 		if (expectedLen >= kMaxStringLen) {
 			free(pBuf);
 			pBuf = (char*)malloc(expectedLen + 1);
 			if (pBuf == nullptr) {
+				va_end(apRetry);
 				return bRet;
 			}
-			vsnprintf(pBuf, expectedLen + 1, format, ap);
+			vsnprintf(pBuf, expectedLen + 1, format, apRetry);
 		}
+		va_end(apRetry);
 #else
         vsnprintf(pBuf, kMaxStringLen, format, ap);
 #endif

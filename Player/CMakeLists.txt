@@ -1,148 +1,228 @@
-#/****************************************************************************
-# Copyright (c) 2013-2014 cocos2d-x.org
-# Copyright (c) 2015-2017 Chukong Technologies Inc.
+# Linux build of the Pixel Game Maker MV player.
 #
-# http://www.cocos2d-x.org
+# The Windows build (proj.win32/player.sln) is the reference. Source lists are
+# generated from its projects into proj.linux/sources.cmake by
+# proj.linux/gen_sources.py; the settings below mirror its configurations.
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
+#   cmake -S Player -B build -G Ninja -DPGMMV_CONFIGURATION=Runtime
+#   cmake --build build
 
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
+cmake_minimum_required(VERSION 3.16)
 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-# ****************************************************************************/
+project(pgmmv-player C CXX)
 
-cmake_minimum_required(VERSION 3.6)
-
-set(APP_NAME player)
-
-project(${APP_NAME})
-
-set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
-set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
-
-include(CocosBuildSet)
-add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
-
-# record sources, headers, resources...
-set(GAME_SOURCE)
-set(GAME_HEADER)
-
-set(GAME_RES_FOLDER
-    "${CMAKE_CURRENT_SOURCE_DIR}/Resources"
-    )
-if(APPLE OR WINDOWS)
-    cocos_mark_multi_resources(common_res_files RES_TO "Resources" FOLDERS ${GAME_RES_FOLDER})
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(FATAL_ERROR "This CMake build is for Linux only. Use proj.win32 on Windows.")
+endif()
+if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+    message(FATAL_ERROR "Only 64-bit builds are supported (the bundled SpiderMonkey is 64-bit).")
 endif()
 
-# add cross-platforms source files and header files 
-list(APPEND GAME_SOURCE
-     Classes/AppDelegate.cpp
-     Classes/HelloWorldScene.cpp
-     )
-list(APPEND GAME_HEADER
-     Classes/AppDelegate.h
-     Classes/HelloWorldScene.h
-     )
+# Runtime: player shipped with built games ("Build Game" with debugging off).
+# DebugMenuRuntime: shipped player with the debug menu.
+# Release: editor test play. Debug: developer build.
+set(PGMMV_CONFIGURATION "Runtime" CACHE STRING "Player configuration: Runtime, DebugMenuRuntime, Release or Debug")
+set_property(CACHE PGMMV_CONFIGURATION PROPERTY STRINGS Runtime DebugMenuRuntime Release Debug)
 
-if(ANDROID)
-    # change APP_NAME to the share library name for Android, it's value depend on AndroidManifest.xml
-    set(APP_NAME MyGame)
-    list(APPEND GAME_SOURCE
-         proj.android/app/jni/hellocpp/main.cpp
-         )
-elseif(LINUX)
-    list(APPEND GAME_SOURCE
-         proj.linux/main.cpp
-         )
-elseif(WINDOWS)
-    list(APPEND GAME_HEADER
-         proj.win32/main.h
-         proj.win32/resource.h
-         )
-    list(APPEND GAME_SOURCE
-         proj.win32/main.cpp
-         proj.win32/game.rc
-         ${common_res_files}
-         )
-elseif(APPLE)
-    if(IOS)
-        list(APPEND GAME_HEADER
-             proj.ios_mac/ios/AppController.h
-             proj.ios_mac/ios/RootViewController.h
-             )
-        set(APP_UI_RES
-            proj.ios_mac/ios/LaunchScreen.storyboard
-            proj.ios_mac/ios/LaunchScreenBackground.png
-            proj.ios_mac/ios/Images.xcassets
-            )
-        list(APPEND GAME_SOURCE
-             proj.ios_mac/ios/main.m
-             proj.ios_mac/ios/AppController.mm
-             proj.ios_mac/ios/RootViewController.mm
-             proj.ios_mac/ios/Prefix.pch
-             ${APP_UI_RES}
-             )
-    elseif(MACOSX)
-        set(APP_UI_RES
-            proj.ios_mac/mac/Icon.icns
-            proj.ios_mac/mac/Info.plist
-            )
-        list(APPEND GAME_SOURCE
-             proj.ios_mac/mac/main.cpp
-             proj.ios_mac/mac/Prefix.pch
-             ${APP_UI_RES}
-             )
+if(NOT CMAKE_BUILD_TYPE)
+    if(PGMMV_CONFIGURATION STREQUAL "Debug")
+        set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
+    else()
+        set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "" FORCE)
     endif()
-    list(APPEND GAME_SOURCE ${common_res_files})
 endif()
 
-# mark app complie info and libs info
-set(all_code_files
-    ${GAME_HEADER}
-    ${GAME_SOURCE}
-    )
-if(NOT ANDROID)
-    add_executable(${APP_NAME} ${all_code_files})
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_EXTENSIONS ON)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
+# The prebuilt static libraries (SpiderMonkey, Bullet, ...) are not position independent.
+set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
+
+include(proj.linux/sources.cmake)
+
+set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
+set(EXTERNAL_DIR ${ENGINE_DIR}/external)
+set(PREBUILT_SUFFIX prebuilt/linux/64-bit)
+
+find_package(PkgConfig REQUIRED)
+find_package(Threads REQUIRED)
+find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+find_package(OpenSSL REQUIRED)
+find_package(Boost REQUIRED)
+pkg_check_modules(SYSDEPS REQUIRED IMPORTED_TARGET
+    glfw3 glew freetype2 fontconfig gtk+-3.0 libpng libjpeg libtiff-4 libwebp zlib
+    libcurl sqlite3 openal vorbisfile vorbis ogg libmpg123 libvlc x11)
+
+# Prebuilt static libraries shipped with cocos2d-x.
+function(pgmmv_prebuilt name path)
+    add_library(${name} STATIC IMPORTED)
+    set_target_properties(${name} PROPERTIES IMPORTED_LOCATION ${path})
+endfunction()
+pgmmv_prebuilt(pgmmv_mozjs ${EXTERNAL_DIR}/spidermonkey/${PREBUILT_SUFFIX}/libjs_static.a)
+pgmmv_prebuilt(pgmmv_box2d ${EXTERNAL_DIR}/Box2D/${PREBUILT_SUFFIX}/libbox2d.a)
+pgmmv_prebuilt(pgmmv_bullet_dynamics ${EXTERNAL_DIR}/bullet/${PREBUILT_SUFFIX}/libBulletDynamics.a)
+pgmmv_prebuilt(pgmmv_bullet_collision ${EXTERNAL_DIR}/bullet/${PREBUILT_SUFFIX}/libBulletCollision.a)
+pgmmv_prebuilt(pgmmv_bullet_linearmath ${EXTERNAL_DIR}/bullet/${PREBUILT_SUFFIX}/libLinearMath.a)
+pgmmv_prebuilt(pgmmv_bullet_minicl ${EXTERNAL_DIR}/bullet/${PREBUILT_SUFFIX}/libMiniCL.a)
+pgmmv_prebuilt(pgmmv_bullet_multithreaded ${EXTERNAL_DIR}/bullet/${PREBUILT_SUFFIX}/libBulletMultiThreaded.a)
+pgmmv_prebuilt(pgmmv_websockets ${EXTERNAL_DIR}/websockets/${PREBUILT_SUFFIX}/libwebsockets.a)
+pgmmv_prebuilt(pgmmv_uv ${EXTERNAL_DIR}/uv/${PREBUILT_SUFFIX}/libuv_a.a)
+
+# Definitions shared by every part of the build. LINUX selects CC_PLATFORM_LINUX.
+set(PGMMV_COMMON_DEFINITIONS
+    LINUX
+    USE_AGTK
+    _USE_MATH_DEFINES
+    GL_GLEXT_PROTOTYPES
+    CC_ENABLE_CHIPMUNK_INTEGRATION=1
+    LWS_WITH_LIBUV
+    # From cocos2d_headers.props, imported by the engine, JS binding and player projects.
+    IMAGE_MT_INIT=1
+)
+if(PGMMV_CONFIGURATION STREQUAL "Debug")
+    list(APPEND PGMMV_COMMON_DEFINITIONS COCOS2D_DEBUG=1 _DEBUG)
 else()
-    add_library(${APP_NAME} SHARED ${all_code_files})
-    add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos/platform/android ${ENGINE_BINARY_PATH}/cocos/platform)
-    target_link_libraries(${APP_NAME} -Wl,--whole-archive cpp_android_spec -Wl,--no-whole-archive)
+    list(APPEND PGMMV_COMMON_DEFINITIONS NDEBUG)
 endif()
 
-target_link_libraries(${APP_NAME} cocos2d)
-target_include_directories(${APP_NAME}
-        PRIVATE Classes
-        PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
+# Player definitions per configuration, as in proj.win32/player.vcxproj.
+if(PGMMV_CONFIGURATION STREQUAL "Runtime")
+    set(PGMMV_PLAYER_DEFINITIONS AGTK_RELEASE AGTK_PLAYER AGTK_RUNTIME)
+elseif(PGMMV_CONFIGURATION STREQUAL "DebugMenuRuntime")
+    set(PGMMV_PLAYER_DEFINITIONS AGTK_RELEASE AGTK_PLAYER AGTK_RUNTIME AGTK_PREVIEW)
+elseif(PGMMV_CONFIGURATION STREQUAL "Release")
+    set(PGMMV_PLAYER_DEFINITIONS AGTK_RELEASE AGTK_PLAYER)
+elseif(PGMMV_CONFIGURATION STREQUAL "Debug")
+    set(PGMMV_PLAYER_DEFINITIONS AGTK_DEBUG AGTK_PLAYER)
+else()
+    message(FATAL_ERROR "Unknown PGMMV_CONFIGURATION: ${PGMMV_CONFIGURATION}")
+endif()
+
+# Name and version the player reports (also to scripts), taken from the Windows
+# version resource. Installer/build_player.bat renames "player" in it to the
+# configuration name before building the runtimes.
+file(STRINGS proj.win32/game.rc PGMMV_RC_VERSIONS REGEX "VALUE \"(File|Product)Version\"")
+string(REGEX MATCH "\"FileVersion\", \"([0-9.]+)" _ "${PGMMV_RC_VERSIONS}")
+set(PGMMV_RC_FILE_VERSION ${CMAKE_MATCH_1})
+string(REGEX MATCH "\"ProductVersion\", \"([0-9.]+)" _ "${PGMMV_RC_VERSIONS}")
+set(PGMMV_RC_PRODUCT_VERSION ${CMAKE_MATCH_1})
+# AppDelegate uses the product version when the file version ends in ".0".
+if(PGMMV_RC_FILE_VERSION MATCHES "\\.0$")
+    set(PGMMV_APP_VERSION ${PGMMV_RC_PRODUCT_VERSION})
+else()
+    set(PGMMV_APP_VERSION ${PGMMV_RC_FILE_VERSION})
+endif()
+if(PGMMV_CONFIGURATION STREQUAL "Runtime")
+    set(PGMMV_APP_NAME runtime)
+elseif(PGMMV_CONFIGURATION STREQUAL "DebugMenuRuntime")
+    set(PGMMV_APP_NAME debugMenuRuntime)
+else()
+    set(PGMMV_APP_NAME player)
+endif()
+message(STATUS "Player: ${PGMMV_APP_NAME} ${PGMMV_APP_VERSION}")
+
+# The code was written for MSVC; keep GCC from rejecting what MSVC accepted.
+set(PGMMV_COMPILE_OPTIONS
+    -fno-strict-aliasing
+    -fsigned-char
+    $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>
+    -Wno-deprecated-declarations
 )
 
-# mark app resources
-setup_cocos_app_config(${APP_NAME})
-if(APPLE)
-    set_target_properties(${APP_NAME} PROPERTIES RESOURCE "${APP_UI_RES}")
-    if(MACOSX)
-        set_target_properties(${APP_NAME} PROPERTIES
-                              MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/mac/Info.plist"
-                              )
-    elseif(IOS)
-        cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")
-        set_xcode_property(${APP_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
-    endif()
-elseif(WINDOWS)
-    cocos_copy_target_dll(${APP_NAME} COPY_TO ${APP_RES_DIR}/..)
-endif()
+set(ENGINE_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/proj.linux/include
+    ${ENGINE_DIR}
+    ${ENGINE_DIR}/cocos
+    ${ENGINE_DIR}/cocos/editor-support
+    ${ENGINE_DIR}/cocos/platform
+    ${ENGINE_DIR}/cocos/audio/include
+    ${ENGINE_DIR}/extensions
+    ${EXTERNAL_DIR}
+    ${EXTERNAL_DIR}/unzip
+    ${EXTERNAL_DIR}/edtaa3func
+    ${EXTERNAL_DIR}/tinyxml2
+    ${EXTERNAL_DIR}/chipmunk/include
+    ${EXTERNAL_DIR}/xxhash
+    ${EXTERNAL_DIR}/ConvertUTF
+    ${EXTERNAL_DIR}/Box2D/include
+    ${EXTERNAL_DIR}/poly2tri
+    ${EXTERNAL_DIR}/poly2tri/common
+    ${EXTERNAL_DIR}/poly2tri/sweep
+    ${EXTERNAL_DIR}/bullet/include
+    ${EXTERNAL_DIR}/bullet/include/bullet
+    ${EXTERNAL_DIR}/websockets/include/linux
+    ${EXTERNAL_DIR}/uv/include
+    ${EXTERNAL_DIR}/spidermonkey/include/linux
+    ${EXTERNAL_DIR}/ImGUI
+)
 
-if(LINUX OR WINDOWS)
-    cocos_copy_res(COPY_TO ${APP_RES_DIR} FOLDERS ${GAME_RES_FOLDER})
-endif()
+# --- Chipmunk (built from the patched copy the Windows build uses) ---
+add_library(pgmmv_chipmunk STATIC ${PGMMV_CHIPMUNK_SOURCES})
+target_include_directories(pgmmv_chipmunk PRIVATE ${EXTERNAL_DIR}/chipmunk/include)
+target_compile_definitions(pgmmv_chipmunk PRIVATE NDEBUG)
+target_compile_options(pgmmv_chipmunk PRIVATE -fno-strict-aliasing)
+
+# --- Recast/Detour ---
+add_library(pgmmv_recast STATIC ${PGMMV_RECAST_SOURCES})
+target_include_directories(pgmmv_recast PRIVATE ${EXTERNAL_DIR})
+target_compile_definitions(pgmmv_recast PRIVATE USE_AGTK)
+
+# --- cocos2d-x engine ---
+add_library(pgmmv_cocos2d STATIC ${PGMMV_COCOS_SOURCES})
+target_include_directories(pgmmv_cocos2d PUBLIC ${ENGINE_INCLUDE_DIRS})
+target_compile_definitions(pgmmv_cocos2d PUBLIC ${PGMMV_COMMON_DEFINITIONS})
+target_compile_options(pgmmv_cocos2d PUBLIC ${PGMMV_COMPILE_OPTIONS})
+target_precompile_headers(pgmmv_cocos2d PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/proj.linux/precheader-linux.h>)
+target_link_libraries(pgmmv_cocos2d PUBLIC
+    pgmmv_recast
+    pgmmv_chipmunk
+    pgmmv_box2d
+    pgmmv_bullet_dynamics
+    pgmmv_bullet_collision
+    pgmmv_bullet_multithreaded
+    pgmmv_bullet_minicl
+    pgmmv_bullet_linearmath
+    pgmmv_websockets
+    pgmmv_uv
+    PkgConfig::SYSDEPS
+    OpenGL::GL
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    Threads::Threads
+    ${CMAKE_DL_LIBS}
+)
+
+# --- JavaScript bindings ---
+add_library(pgmmv_jscocos2d STATIC ${PGMMV_JSB_SOURCES})
+target_include_directories(pgmmv_jscocos2d PUBLIC
+    ${ENGINE_DIR}/cocos/scripting/js-bindings
+    ${ENGINE_DIR}/cocos/scripting/js-bindings/auto
+    ${ENGINE_DIR}/cocos/scripting/js-bindings/manual
+    ${ENGINE_DIR}/cocos/scripting/js-bindings/manual/cocostudio
+    ${ENGINE_DIR}/cocos/scripting/js-bindings/manual/navmesh
+)
+target_compile_definitions(pgmmv_jscocos2d PUBLIC COCOS2D_JAVASCRIPT=1)
+target_precompile_headers(pgmmv_jscocos2d PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/proj.linux/precheader-linux.h>)
+target_link_libraries(pgmmv_jscocos2d PUBLIC pgmmv_cocos2d pgmmv_mozjs)
+
+# --- Player ---
+add_executable(player ${PGMMV_PLAYER_SOURCES})
+target_include_directories(player PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/proj.linux
+    ${CMAKE_CURRENT_SOURCE_DIR}/Classes
+    ${CMAKE_CURRENT_SOURCE_DIR}/Classes/External
+    ${CMAKE_CURRENT_SOURCE_DIR}/Classes/Manager
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${EXTERNAL_DIR}/chipmunk/include/chipmunk
+)
+target_compile_definitions(player PRIVATE ${PGMMV_PLAYER_DEFINITIONS} AGTKPLAYER_EXPORTS
+    PGMMV_APP_NAME="${PGMMV_APP_NAME}" PGMMV_APP_VERSION="${PGMMV_APP_VERSION}")
+# The Windows project force-includes stdafx.h into every C++ file.
+target_precompile_headers(player PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/proj.linux/stdafx.h>)
+target_link_libraries(player PRIVATE pgmmv_jscocos2d Boost::headers rt)
+target_link_options(player PRIVATE -no-pie)

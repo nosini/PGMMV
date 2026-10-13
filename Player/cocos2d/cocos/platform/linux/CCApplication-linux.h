@@ -109,11 +109,20 @@ public:
      @brief Get target platform
      */
     virtual Platform getTargetPlatform() override;
+#ifdef USE_AGTK
+    /** Locale like "ja_JP", as the Windows player reports it. */
+    virtual std::string getCurrentLanguageShortName() const override;
+    /** Only stored: Windows accepts dropped files in preview builds only. */
+    static void setDropFileCallback(void(*callback)(const char *filename));
+#endif
 protected:
     long       _animationInterval;  //micro second
     std::string _resourceRootPath;
     
     static Application * sm_pSharedApplication;
+#ifdef USE_AGTK
+    static void (*_dropFileCallback)(const char *filename);
+#endif
 };
 
 NS_CC_END

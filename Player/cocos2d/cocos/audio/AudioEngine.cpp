@@ -35,7 +35,7 @@
 #include "audio/android/AudioEngine-inl.h"
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC
 #include "audio/apple/AudioEngine-inl.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX // Linux uses the OpenAL backend in audio/win32
 #include "audio/win32/AudioEngine-win32.h"
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
 #include "audio/winrt/AudioEngine-winrt.h"

@@ -143,6 +143,41 @@ Application::Platform Application::getTargetPlatform()
     return Platform::OS_LINUX;
 }
 
+#ifdef USE_AGTK
+void (*Application::_dropFileCallback)(const char *filename) = nullptr;
+
+void Application::setDropFileCallback(void(*callback)(const char *filename))
+{
+    _dropFileCallback = callback;
+}
+
+std::string Application::getCurrentLanguageShortName() const
+{
+    // Same precedence as gettext. Windows returns the first five characters of
+    // the user locale name ("ja-JP") with "_" in place of "-".
+    std::string lang;
+    const char *language = getenv("LANGUAGE");
+    if (language && *language) {
+        lang = language;
+        lang = lang.substr(0, lang.find(':'));
+    }
+    if (lang.empty()) {
+        for (const char *name : { "LC_ALL", "LC_MESSAGES", "LANG" }) {
+            const char *value = getenv(name);
+            if (value && *value) {
+                lang = value;
+                break;
+            }
+        }
+    }
+    lang = lang.substr(0, lang.find_first_of(".@"));
+    if (lang.empty() || lang == "C" || lang == "POSIX") {
+        lang = "en_US";
+    }
+    return lang.substr(0, 5);
+}
+#endif
+
 std::string Application::getVersion()
 {
     return "";

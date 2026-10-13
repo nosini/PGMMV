@@ -52,7 +52,7 @@ private:
 	bool checkHitRect(cocos2d::Rect& current, cocos2d::Rect& prev, bool& isHitPrev);
 	
 	// 対象位置が坂の上にいるかチェックする
-	bool checkUpSide(Vec2& targetPos);
+	bool checkUpSide(const Vec2& targetPos);
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
 #else

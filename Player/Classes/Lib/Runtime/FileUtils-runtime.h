@@ -6,6 +6,8 @@
 #include "platform/CCPlatformConfig.h"
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "platform/win32/CCFileUtils-win32.h"
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#include "platform/linux/CCFileUtils-linux.h"
 // #AGTK-NX
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
 #endif
@@ -23,6 +25,8 @@ NS_CC_BEGIN
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 class FileUtilsRuntime : public FileUtilsWin32//FileUtils
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+class FileUtilsRuntime : public FileUtilsLinux
 // #AGTK-NX
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
 #endif

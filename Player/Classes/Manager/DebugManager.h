@@ -10,7 +10,7 @@
 #include "Lib/Portal.h"
 #include "Lib/Course.h"
 #include "Lib/Slope.h"
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 #include "ImGUI/imgui.h"
 #endif
 #include "Manager/InputManager.h"

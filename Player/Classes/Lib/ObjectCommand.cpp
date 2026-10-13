@@ -1647,7 +1647,7 @@ void ObjectAction::execActionObjectChange(agtk::data::ObjectCommandData *command
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
 #else
-		if (parentObject > 0) {
+		if (parentObject != nullptr) {
 #endif
 			parentObject->addChildObject(newObject, _object->_parentFollowPosOffset, _object->_parentFollowConnectId);
 		}

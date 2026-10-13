@@ -74,7 +74,7 @@ class CollisionUtils {
 	static bool cross(CollisionLine* one, CollisionLine* two);
 
 	/** 円と線分の衝突判定を行って交点と反射ベクトルを出力する **/
-	static bool checkCircleHitSegmentAndGetIntersectionAndReflection(std::vector<CollisionLine>& wallList, CollisionLine* objLine, int wallBit, float size, float repulsion, const cocos2d::Vec2* speed, cocos2d::Vec2* crossPos, cocos2d::Vec2* reflection, bool checkInverseNormal = true);
+	static bool checkCircleHitSegmentAndGetIntersectionAndReflection(const std::vector<CollisionLine>& wallList, CollisionLine* objLine, int wallBit, float size, float repulsion, const cocos2d::Vec2* speed, cocos2d::Vec2* crossPos, cocos2d::Vec2* reflection, bool checkInverseNormal = true);
 
 	/** 線分交差判定で押し出される先を出力する **/
 	static bool checkPushCross2(CollisionLine* wallLine, CollisionLine* objLine, cocos2d::Vec2* crossPos);

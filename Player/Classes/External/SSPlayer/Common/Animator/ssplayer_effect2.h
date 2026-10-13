@@ -4,7 +4,7 @@
 
 #include "xorshift32.h"
 #include "../../SS6Player.h"
-#include "../loader/ssloader.h"
+#include "../Loader/ssloader.h"
 #include "ssplayer_cellmap.h"
 #include "ssplayer_PartState.h"
 

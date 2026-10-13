@@ -456,10 +456,10 @@ bool checkWallHit(WallHitInfo &wallHitInfo, const Point &pos, const Size &size, 
 
 #ifdef USE_MULTITHREAD_OBJECT_UPDATE
 bool checkBuriedWall(cocos2d::Rect& objectRect, std::vector<agtk::Tile *> &tileList);
-bool pushBackBuriedWall(agtk::Object* object, cocos2d::Rect& objectRect, cocos2d::Vec2& move, std::vector<agtk::Tile *> &tileList);
+bool pushBackBuriedWall(agtk::Object* object, cocos2d::Rect& objectRect, const cocos2d::Vec2& move, std::vector<agtk::Tile *> &tileList);
 #else
 bool checkBuriedWall(cocos2d::Rect& objectRect, cocos2d::Array* tileList);
-bool pushBackBuriedWall(agtk::Object* object, cocos2d::Rect& objectRect, cocos2d::Vec2& move, cocos2d::Array* tileList);
+bool pushBackBuriedWall(agtk::Object* object, cocos2d::Rect& objectRect, const cocos2d::Vec2& move, cocos2d::Array* tileList);
 #endif
 bool pushBackBuriedObjectWall(cocos2d::Rect& objectPrevRect, cocos2d::Rect& objectCrntRect, cocos2d::Vec2& move, agtk::WallHitInfoGroup* infoGroup);
 #ifdef USE_MULTITHREAD_OBJECT_UPDATE

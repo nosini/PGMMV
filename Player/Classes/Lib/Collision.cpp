@@ -1786,9 +1786,9 @@ bool checkBuriedWallDownPos(cocos2d::Rect& objectRect, float y, cocos2d::Array* 
 }
 
 #ifdef USE_MULTITHREAD_OBJECT_UPDATE
-bool pushBackBuriedWall(agtk::Object* object, cocos2d::Rect& objectRect, cocos2d::Vec2& move, std::vector<agtk::Tile *> &tileList)
+bool pushBackBuriedWall(agtk::Object* object, cocos2d::Rect& objectRect, const cocos2d::Vec2& move, std::vector<agtk::Tile *> &tileList)
 #else
-bool pushBackBuriedWall(agtk::Object* object, cocos2d::Rect& objectRect, cocos2d::Vec2& move, cocos2d::Array* tileList)
+bool pushBackBuriedWall(agtk::Object* object, cocos2d::Rect& objectRect, const cocos2d::Vec2& move, cocos2d::Array* tileList)
 #endif
 {
 	Rect wallRect, checkRect;
@@ -1998,7 +1998,8 @@ bool pushBackBuriedWall(agtk::Object* object, cocos2d::Rect& objectRect, cocos2d
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
 #ifdef USE_MULTITHREAD_OBJECT_UPDATE
 	agtk::MtVector<agtk::Slope *> slopeList;
-	newCheckWallHit(info, hitX, hitY, 0, tileList, &slopeList, nullptr, moveVec, Vec2(0, 0), objectRect, false, false, hitTiles);
+	Vec2 tileThresholdMoveVec(0, 0);
+	newCheckWallHit(info, hitX, hitY, 0, tileList, &slopeList, nullptr, moveVec, tileThresholdMoveVec, objectRect, false, false, hitTiles);
 #else
 	newCheckWallHit(info, hitX, hitY, 0, tileList, nullptr, nullptr, moveVec, Vec2(0, 0), objectRect, false, false, hitTiles);
 #endif

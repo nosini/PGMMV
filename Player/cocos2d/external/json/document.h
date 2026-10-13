@@ -1274,6 +1274,11 @@ public:
         GenericValue n(name);
         return AddMember(n, value, allocator);
     }
+    template <typename T>
+    RAPIDJSON_DISABLEIF_RETURN((internal::OrExpr<internal::IsPointer<T>, internal::IsGenericValue<T> >), (GenericValue&))
+    AddMember(GenericValue&& name, T value, Allocator& allocator) {
+        return AddMember(name, value, allocator);
+    }
 #endif // RAPIDJSON_HAS_CXX11_RVALUE_REFS
 
 

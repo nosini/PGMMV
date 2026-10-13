@@ -1064,7 +1064,8 @@ static void myCollisionSeparate(cpArbiter *arb, cpSpace *space, void *data)
 
 #pragma mark constructor / destructor
 
-#if CC_TARGET_PLATFORM != CC_PLATFORM_NX	//ACT2-6410: from chipmunk source.
+// Linux links chipmunk statically and gets its definition; libcocos2d.dll does not export it.
+#if CC_TARGET_PLATFORM != CC_PLATFORM_NX && CC_TARGET_PLATFORM != CC_PLATFORM_LINUX	//ACT2-6410: from chipmunk source.
 static cpBool AlwaysCollide(cpArbiter *arb, cpSpace *space, void *data) { return cpTrue; }
 static void DoNothing(cpArbiter *arb, cpSpace *space, void *data) {}
 

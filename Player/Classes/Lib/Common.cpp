@@ -1057,6 +1057,9 @@ std::string UTF8toSjis(std::string srcUTF8)
 {
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+	// Converts to the ANSI code page for Windows; text files are UTF-8 on Linux.
+	return srcUTF8;
 #else
 	//Unicodeへ変換後の文字列長を得る
 	int lenghtUnicode = MultiByteToWideChar(CP_UTF8, 0, srcUTF8.c_str(), srcUTF8.size() + 1, NULL, 0);

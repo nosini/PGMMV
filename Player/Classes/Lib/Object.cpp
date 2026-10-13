@@ -6026,7 +6026,7 @@ void getTouchingObjectWallHitInfoAnyway(WallHitInfo &wallHitInfo, agtk::Object *
 }
 
 #ifdef USE_MULTITHREAD_OBJECT_UPDATE
-std::vector<agtk::Tile *> getFilteredListByTileGroup(std::vector<agtk::Tile *> &list, int collideWithTileGroupBit)
+std::vector<agtk::Tile *> getFilteredListByTileGroup(const std::vector<agtk::Tile *> &list, int collideWithTileGroupBit)
 {
 	std::vector<agtk::Tile *> newList;
 	for (auto tile : list) {
@@ -6547,7 +6547,7 @@ void updateObjectWallEffect(agtk::Object *object, cocos2d::__Array *tileList, ag
 * 重なり時のマスク効果の更新
 */
 #ifdef USE_MULTITHREAD_OBJECT_UPDATE
-void updateObjectOverlapMaskEffect(agtk::Object *object, std::vector<agtk::Tile *> &tileList, agtk::data::TileData::EnumConditionType conditionType)
+void updateObjectOverlapMaskEffect(agtk::Object *object, const std::vector<agtk::Tile *> &tileList, agtk::data::TileData::EnumConditionType conditionType)
 #else
 void updateObjectOverlapMaskEffect(agtk::Object *object, cocos2d::__Array *tileList, agtk::data::TileData::EnumConditionType conditionType)
 #endif

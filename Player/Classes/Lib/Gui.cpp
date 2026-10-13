@@ -1123,7 +1123,8 @@ bool ObjectParameterTextUi::init(agtk::Object * targetObject, agtk::data::Object
 			// テキストデータを更新
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-			getTextGui()->updateText(projectData->getExpandedText(nullptr, textData->getText(nullptr), std::list<int>(1, textId)), textData->getLetterSpacing(), textData->getLineSpacing(), -1, -1, 0, 0);
+			std::list<int> textIdList(1, textId);
+			getTextGui()->updateText(projectData->getExpandedText(nullptr, textData->getText(nullptr), textIdList), textData->getLetterSpacing(), textData->getLineSpacing(), -1, -1, 0, 0);
 #else
 #endif
 			// 角度を設定

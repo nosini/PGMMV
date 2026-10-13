@@ -1024,6 +1024,7 @@ int32_t JavascriptManager::getInt32(JS::RootedValue &v)
 
 
 #if 0
+/* Kept as a comment: GCC rejects the curly quotes below even in skipped code.
 namespace AGTK {
 	class VariableMgr {
 	public:
@@ -1211,6 +1212,7 @@ void register_all(JSContext* cx, JSObject* obj){
 	obj = ns;
 	js_register(cx, obj);
 }
+*/
 #endif
 
 #if 0
@@ -1343,7 +1345,7 @@ bool js_log(JSContext *cx, unsigned argc, JS::Value *vp)
 	for (unsigned int i = 0; i < len; i++){
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v = args[i];
+		auto v = args[i];
 #else
 #endif
 		if (v.isString()){
@@ -1418,7 +1420,7 @@ bool js_actionCommands_objectCreate(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if C_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isNumber()) {
@@ -1430,7 +1432,7 @@ bool js_actionCommands_objectCreate(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[1];
+		auto v2 = args[1];
 #else
 #endif
 		if (v2.isInt32()) {
@@ -1445,7 +1447,7 @@ bool js_actionCommands_objectCreate(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[2];
+		auto v2 = args[2];
 #else
 #endif
 		if (v2.isInt32()) {
@@ -1462,7 +1464,7 @@ bool js_actionCommands_objectCreate(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[3];
+		auto v2 = args[3];
 #else
 #endif
 		if (!v2.isNumber()) {
@@ -1473,6 +1475,7 @@ bool js_actionCommands_objectCreate(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 #else
 #if 0
+	/* Kept as a comment: GCC rejects some of these characters even in skipped code.
 	"arg1: <int: オブジェクトID>
 		arg2: <int : 生成位置>
 		arg3 : <bool : 接続点を使用>
@@ -1483,7 +1486,7 @@ bool js_actionCommands_objectCreate(JSContext *cx, unsigned argc, JS::Value *vp)
 		arg8 : <bool : 子オブジェクトとして生成する>
 		arg9 : <bool : 生成時のオブジェクトの向きを、このオブジェクトに合わせる>
 		arg10 : <bool : このオブジェクトより表示の優先度を下げる>
-		arg11 : <bool : 生成したオブジェクトがグリッドに吸着する>"
+		arg11 : <bool : 生成したオブジェクトがグリッドに吸着する>" */
 #endif
 	int objectId = -1;
 	int createPosition = 0;
@@ -1496,7 +1499,7 @@ bool js_actionCommands_objectCreate(JSContext *cx, unsigned argc, JS::Value *vp)
 	bool useRotation = false;
 	bool lowerPriority = false;
 	bool gridMagnet = false;
-	auto &v2 = args[0];
+	auto v2 = args[0];
 	if (!v2.isInt32()) {
 		args.rval().set(JS::Int32Value(-1));
 		return false;
@@ -1618,7 +1621,7 @@ bool js_actionCommands_objectDestroy(JSContext *cx, unsigned argc, JS::Value *vp
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isInt32()) {
@@ -1656,7 +1659,7 @@ bool js_controllers_getOperationKeyPressed(JSContext *cx, unsigned argc, JS::Val
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isInt32()) {
@@ -1668,7 +1671,7 @@ bool js_controllers_getOperationKeyPressed(JSContext *cx, unsigned argc, JS::Val
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[1];
+		auto v2 = args[1];
 #else
 #endif
 		if (!v2.isInt32()) {
@@ -1710,7 +1713,7 @@ bool js_controllers_getOperationKeyValue(JSContext *cx, unsigned argc, JS::Value
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isInt32()) {
@@ -1722,7 +1725,7 @@ bool js_controllers_getOperationKeyValue(JSContext *cx, unsigned argc, JS::Value
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[1];
+		auto v2 = args[1];
 #else
 #endif
 		if (!v2.isInt32()) {
@@ -1764,7 +1767,7 @@ bool js_controllers_getKeyValue(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isInt32()) {
@@ -1776,7 +1779,7 @@ bool js_controllers_getKeyValue(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[1];
+		auto v2 = args[1];
 #else
 #endif
 		if (!v2.isInt32()) {
@@ -1816,7 +1819,7 @@ bool js_controllers_isConnected(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isInt32()) {
@@ -2091,7 +2094,7 @@ bool js_switches_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -2184,7 +2187,7 @@ bool js_switches_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -2255,7 +2258,7 @@ bool js_switch_setValue(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (v2.isBoolean()) {
@@ -2333,7 +2336,7 @@ bool js_variables_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -2426,7 +2429,7 @@ bool js_variables_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -2497,7 +2500,7 @@ bool js_variable_setValue(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (v2.isDouble()) {

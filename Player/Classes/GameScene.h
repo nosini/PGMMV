@@ -4,7 +4,7 @@
 #include "Lib/Macros.h"
 #include "Lib/BaseLayer.h"
 #include "Lib/Scene.h"
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 #include "ImGUI/imgui.h"
 #endif
 // #AGTK-NX

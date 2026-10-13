@@ -138,7 +138,7 @@ bool js_scenes_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -279,7 +279,7 @@ bool js_scenes_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -360,7 +360,7 @@ bool js_scene_getLayerIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -416,7 +416,7 @@ bool js_scene_getLayerIndexById(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isNumber()) {
@@ -511,7 +511,7 @@ bool js_scene_getLayerById(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isNumber()) {
@@ -645,7 +645,7 @@ bool js_layer_getTileInfo(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isNumber()) {
@@ -656,7 +656,7 @@ bool js_layer_getTileInfo(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[1];
+		auto v2 = args[1];
 #else
 #endif
 		if (!v2.isNumber()) {
@@ -849,7 +849,7 @@ bool js_layer_getSlopeById(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isNumber()) {

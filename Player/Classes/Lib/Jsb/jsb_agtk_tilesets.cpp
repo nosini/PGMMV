@@ -80,7 +80,7 @@ bool js_tilesets_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -182,7 +182,7 @@ bool js_tilesets_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -218,7 +218,7 @@ bool js_tileset_getWallBits(JSContext *cx, unsigned argc, JS::Value *vp)
     {
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v = args[0];
+		auto v = args[0];
 #else
 #endif
 		if (!v.isNumber()) {
@@ -229,7 +229,7 @@ bool js_tileset_getWallBits(JSContext *cx, unsigned argc, JS::Value *vp)
     {
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v = args[1];
+		auto v = args[1];
 #else
 #endif
 		if (!v.isNumber()) {

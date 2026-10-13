@@ -36,6 +36,11 @@ THE SOFTWARE.
 #include <sys/stat.h>
 #include <stdio.h>
 #include <errno.h>
+#ifdef USE_AGTK
+#include <dirent.h>
+#include <strings.h>
+#include <algorithm>
+#endif
 
 #ifndef CC_RESOURCE_FOLDER_LINUX
 #define CC_RESOURCE_FOLDER_LINUX ("/Resources/")
@@ -46,6 +51,18 @@ using namespace std;
 #define DECLARE_GUARD std::lock_guard<std::recursive_mutex> mutexGuard(_mutex)
 
 NS_CC_BEGIN
+
+#ifdef USE_AGTK
+static std::string s_applicationPath;
+
+void FileUtilsLinux::setApplicationPath(const std::string& path)
+{
+    s_applicationPath = path;
+    if (!s_applicationPath.empty() && s_applicationPath.back() != '/') {
+        s_applicationPath += '/';
+    }
+}
+#endif
 
 FileUtils* FileUtils::getInstance()
 {
@@ -78,8 +95,31 @@ bool FileUtilsLinux::init()
 
     fullpath[length] = '\0';
     std::string appPath = fullpath;
+#ifdef USE_AGTK
+    // Like player.exe on Windows, resources are read from the game folder itself.
+    if (s_applicationPath.empty()) {
+        setApplicationPath(appPath.substr(0, appPath.find_last_of("/")));
+    }
+    _defaultResRootPath = s_applicationPath;
+
+    // Writable path: $XDG_DATA_HOME/pgmmv-player/player/, the counterpart of
+    // %LOCALAPPDATA%/player/ on Windows. GameManager stores save data next to it,
+    // in a folder named after the game folder.
+    const char* xdg_data_path = getenv("XDG_DATA_HOME");
+    std::string xdgDataPath;
+    if (xdg_data_path == NULL || xdg_data_path[0] == '\0') {
+        const char* home = getenv("HOME");
+        xdgDataPath = home ? home : "";
+        xdgDataPath += "/.local/share";
+    } else {
+        xdgDataPath = xdg_data_path;
+    }
+    _writablePath = xdgDataPath + "/pgmmv-player/player/";
+    return FileUtils::init();
+#else
     _defaultResRootPath = appPath.substr(0, appPath.find_last_of("/"));
     _defaultResRootPath += CC_RESOURCE_FOLDER_LINUX;
+#endif
 
     // Set writable path to $XDG_CONFIG_HOME or ~/.config/<app name>/ if $XDG_CONFIG_HOME not exists.
     const char* xdg_config_path = getenv("XDG_CONFIG_HOME");
@@ -100,14 +140,60 @@ bool FileUtilsLinux::init()
 string FileUtilsLinux::getWritablePath() const
 {
     DECLARE_GUARD;
+#ifdef USE_AGTK
+    // The parent folders may not exist yet either.
+    createDirectory(_writablePath);
+#else
     struct stat st;
     stat(_writablePath.c_str(), &st);
     if (!S_ISDIR(st.st_mode)) {
         mkdir(_writablePath.c_str(), 0744);
     }
+#endif
 
     return _writablePath;
 }
+
+#ifdef USE_AGTK
+std::string FileUtilsLinux::getApplicationPath()
+{
+    return s_applicationPath;
+}
+
+std::vector<std::string> FileUtilsLinux::getDirContents(std::string dirname)
+{
+    // Regular files only, in the case-insensitive order Windows lists them in.
+    std::vector<std::string> list;
+    DIR* dir = opendir(dirname.c_str());
+    if (dir == nullptr) {
+        return list;
+    }
+    while (struct dirent* entry = readdir(dir)) {
+        std::string path = dirname + "/" + entry->d_name;
+        struct stat st;
+        if (stat(path.c_str(), &st) == 0 && S_ISREG(st.st_mode)) {
+            list.push_back(entry->d_name);
+        }
+    }
+    closedir(dir);
+    std::sort(list.begin(), list.end(), [](const std::string& a, const std::string& b) {
+        return strcasecmp(a.c_str(), b.c_str()) < 0;
+    });
+    return list;
+}
+
+FILE* FileUtilsLinux::memFopen(const char* ptr, size_t sz, int p[2])
+{
+    (void)p;
+    return fmemopen((void*)ptr, sz, "rb");
+}
+
+void FileUtilsLinux::memFclose(FILE* fp, int p[2])
+{
+    (void)p;
+    fclose(fp);
+}
+#endif
 
 bool FileUtilsLinux::isFileExistInternal(const std::string& strFilePath) const
 {

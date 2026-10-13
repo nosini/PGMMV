@@ -102,7 +102,7 @@ bool js_animations_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -168,7 +168,7 @@ bool js_animations_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -359,7 +359,7 @@ bool js_motions_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	JS::RootedObject jsthis(cx, args.thisv().toObjectOrNull());
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -482,7 +482,7 @@ bool js_motions_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -588,7 +588,7 @@ bool js_directions_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	JS::RootedObject jsthis(cx, args.thisv().toObjectOrNull());
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -732,7 +732,7 @@ bool js_directions_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -854,7 +854,7 @@ bool js_tracks_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	JS::RootedObject jsthis(cx, args.thisv().toObjectOrNull());
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -1020,7 +1020,7 @@ bool js_tracks_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {

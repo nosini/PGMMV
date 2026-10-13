@@ -4,6 +4,8 @@
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 #include "platform/win32/CCFileUtils-win32.h"
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
+#include "platform/linux/CCFileUtils-linux.h"
 #endif
 #include "platform/CCCommon.h"
 #include "FileUtils-runtime.h"
@@ -146,6 +148,8 @@ FileUtils::Status FileUtilsRuntime::getContents(const std::string& filename, Res
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 		return FileUtilsWin32::getContents(filename, buffer);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+		return FileUtilsLinux::getContents(filename, buffer);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
 #endif
 	}
@@ -154,6 +158,8 @@ FileUtils::Status FileUtilsRuntime::getContents(const std::string& filename, Res
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	auto status = FileUtilsWin32::getContents(filename, &buf);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+	auto status = FileUtilsLinux::getContents(filename, &buf);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
 #endif
     if(status != FileUtils::Status::OK){

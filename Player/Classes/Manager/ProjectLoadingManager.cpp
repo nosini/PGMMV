@@ -1,9 +1,9 @@
-#include "Manager\ProjectLoadingManager.h"
+#include "Manager/ProjectLoadingManager.h"
 
 #if defined(USE_BG_PROJECT_LOAD) || defined(USE_PRELOAD_TEX)
-#include "Manager\GameManager.h"
-#include "platform\CCImage.h"
-#include "Data\AssetData.h"
+#include "Manager/GameManager.h"
+#include "platform/CCImage.h"
+#include "Data/AssetData.h"
 
 ProjectLoadingManager* ProjectLoadingManager::_projectLoadingManager = nullptr;
 

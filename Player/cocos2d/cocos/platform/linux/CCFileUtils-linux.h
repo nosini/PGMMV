@@ -54,6 +54,18 @@ public:
     /* override functions */
     bool init() override;
     virtual std::string getWritablePath() const override;
+#ifdef USE_AGTK
+    /**
+     * Sets the game folder: resources are looked up there and getApplicationPath() returns it,
+     * like the folder of player.exe on Windows. Call before FileUtils::getInstance().
+     * Defaults to the folder of the executable.
+     */
+    static void setApplicationPath(const std::string& path);
+    virtual std::string getApplicationPath() override;
+    virtual std::vector<std::string> getDirContents(std::string dirname) override;
+    virtual FILE* memFopen(const char* ptr, size_t sz, int p[2]) override;
+    virtual void memFclose(FILE* fp, int p[2]) override;
+#endif
 private:
     virtual bool isFileExistInternal(const std::string& strFilePath) const override;
 };

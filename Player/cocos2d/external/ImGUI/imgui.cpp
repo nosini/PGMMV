@@ -903,7 +903,13 @@ int ImFormatStringV(char* buf, int buf_size, const char* fmt, va_list args)
 #ifdef USE_AGTK//sakihama-h, 2018.06.19, ACT2-2042
 int ImFormatStringLength(const char *fmt, va_list args)
 {
-	return vsnprintf(NULL, 0, fmt, args);
+	// Measure on a copy: callers format with args afterwards, and vsnprintf
+	// consumes the va_list on x86-64 Linux.
+	va_list args_copy;
+	va_copy(args_copy, args);
+	int len = vsnprintf(NULL, 0, fmt, args_copy);
+	va_end(args_copy);
+	return len;
 }
 
 char *ImFormatStringMalloc(unsigned int size)

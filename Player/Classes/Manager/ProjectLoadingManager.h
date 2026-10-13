@@ -6,7 +6,7 @@
 #if defined(USE_BG_PROJECT_LOAD) || defined(USE_PRELOAD_TEX)
 #include <thread>
 #include <json/document.h>
-#include "platform\CCImage.h"
+#include "platform/CCImage.h"
 
 
 class ProjectLoadingManager

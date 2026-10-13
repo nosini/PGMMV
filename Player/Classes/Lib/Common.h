@@ -491,6 +491,15 @@ private:
 //-------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------
 cocos2d::Rect GetRectVertices(cocos2d::Vec2 *vertices, unsigned int segments);
+#if CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
+// Layout of the Windows GUID structure.
+struct GUID {
+	uint32_t Data1;
+	uint16_t Data2;
+	uint16_t Data3;
+	uint8_t Data4[8];
+};
+#endif
 std::string GuidToString(GUID guid);
 GUID StringToGuid(std::string str);
 int GetStringLength(std::string str);

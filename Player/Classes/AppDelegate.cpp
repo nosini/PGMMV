@@ -21,7 +21,7 @@
 #include "Manager/FontManager.h"
 
 // #AGTK-NX
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_NX) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 #include "ImGUI/IMGUIGLViewImpl.h"
 #include "ImGUI/ImGuiLayer.h"
 #include "ImGUI/imgui.h"
@@ -47,6 +47,10 @@
 #include <typeinfo>
 #include <conio.h>
 #include <crtdbg.h>
+#endif
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#include "LinuxPlatform.h"
 #endif
 
 #include "Manager/JavascriptManager.h"
@@ -148,12 +152,17 @@ static LPSTR wtoa(LPCWSTR src)
 }
 #endif
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 static void getWebSocketPortAndProjectPathAndLocale(int *pPort, std::string *pProjectFilePath, std::string *pLocale, int *pLogNumber, std::string *pAutoTestFilePath)
 {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+	const auto &args = LinuxPlatform::getArguments();
+	int argc = (int)args.size();
+#else
 	int argc;
 
 	auto argv_w = CommandLineToArgvW(GetCommandLine(), &argc);
+#endif
 
 	//オプション引数検索
 	bool portArg = false;
@@ -162,7 +171,11 @@ static void getWebSocketPortAndProjectPathAndLocale(int *pPort, std::string *pPr
 	bool localArg = false;
 	bool logNumberArg = false;
 	for (int i = 0; i < argc; i++) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+		auto argv_c = strdup(args[i].c_str());
+#else
 		auto argv_c = wtoa(argv_w[i]);
+#endif
 		if (argv_c == NULL) {
 			break;
 		}
@@ -225,7 +238,9 @@ static void getWebSocketPortAndProjectPathAndLocale(int *pPort, std::string *pPr
 		}
 		free(argv_c);
 	}
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	(void)LocalFree((HLOCAL)argv_w);
+#endif
 }
 // #AGTK-NX
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
@@ -277,6 +292,15 @@ static void getAppInfo()
 	}
 	(void)LocalFree((HLOCAL)argv_w);
 }
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+static void getAppInfo()
+{
+	// The Windows player reads these from its version resource (proj.win32/game.rc);
+	// CMake takes them from the same file.
+	GameManager::getInstance()->setAppVersion(cocos2d::String::create(PGMMV_APP_VERSION));
+	GameManager::getInstance()->setAppName(cocos2d::String::create(PGMMV_APP_NAME));
+	CCLOG("%s %s", GameManager::getInstance()->getAppName()->getCString(), GameManager::getInstance()->getAppVersion()->getCString());
+}
 // #AGTK-NX
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
 #endif
@@ -312,6 +336,14 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #ifdef USE_RUNTIME
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+	{
+		const auto &args = LinuxPlatform::getArguments();
+		if (args.size() >= 2) {
+			CCLOG("%d: %s", 1, args[1].c_str());
+			logNumber = atoi(args[1].c_str());
+		}
+	}
 #else
 	{
 		int argc;
@@ -385,6 +417,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 			locale = "zh_CN";
 		}
 	}
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+	locale = LinuxPlatform::getUiLocale();
 // #AGTK-NX
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
 #endif
@@ -472,7 +506,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	AGTK_ACTION_LOG(1, "# GetOpenGLView");
 	auto glview = director->getOpenGLView();
     if(!glview) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 		AGTK_ACTION_LOG(1, "# IMGUIGLViewImpl CreateWithRect");
 		glview = IMGUIGLViewImpl::createWithRect(
 			projectData->getGameInformation()->getTitle(),//viewName
@@ -493,6 +527,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
 #endif
+		if (glview == nullptr) {
+			// Window creation failed (already reported by MessageBox).
+			return false;
+		}
 		director->setOpenGLView(glview);
 	}
 // #AGTK-NX #AGTK-WIN
@@ -636,7 +674,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	GameManager::getInstance()->startCanvas();
 #endif
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 # if 1
 	AGTK_ACTION_LOG(1, "# DebugManager GetInstance");
 	agtk::DebugManager::getInstance();

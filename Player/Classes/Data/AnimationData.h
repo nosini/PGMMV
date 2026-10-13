@@ -340,7 +340,7 @@ public:
 	agtk::data::MotionData *getMotionData(int id);
 	agtk::data::DirectionData *getDirectionData(int motionId, int directionId);
 public:
-	cocos2d::Vec2 calcOriginPosition(cocos2d::Size& size);
+	cocos2d::Vec2 calcOriginPosition(const cocos2d::Size& size);
 #if defined(AGTK_DEBUG)
 	void dump();
 #endif

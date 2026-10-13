@@ -312,6 +312,7 @@ void BasePlayer::setAnimationData(agtk::data::AnimationData *animationData)
 // #AGTK-NX
 #if CC_TARGET_PLATFORM == CC_PLATFORM_NX
 #endif
+	{
 	auto frameDic = _animationData->getFrameList();
 	if (frameDic != nullptr) {
 		cocos2d::DictElement *el3;
@@ -327,6 +328,7 @@ void BasePlayer::setAnimationData(agtk::data::AnimationData *animationData)
 				goto LEnd;
 			}
 		}
+	}
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM == CC_PLATFORM_NX

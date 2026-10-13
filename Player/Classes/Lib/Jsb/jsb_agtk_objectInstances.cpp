@@ -321,7 +321,7 @@ bool js_objectInstances_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -496,7 +496,7 @@ bool js_objectInstances_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -507,7 +507,7 @@ bool js_objectInstances_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[1];
+		auto v2 = args[1];
 #else
 #endif
 		if (!v2.isString()) {
@@ -686,7 +686,7 @@ bool js_objectInstance_execCommandTemplateMove(JSContext *cx, unsigned argc, JS:
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -732,7 +732,7 @@ bool js_objectInstance_execCommandObjectLock(JSContext *cx, unsigned argc, JS::V
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -778,7 +778,7 @@ bool js_objectInstance_execCommandObjectCreate(JSContext *cx, unsigned argc, JS:
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -824,7 +824,7 @@ bool js_objectInstance_execCommandObjectChange(JSContext *cx, unsigned argc, JS:
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -870,7 +870,7 @@ bool js_objectInstance_execCommandObjectMove(JSContext *cx, unsigned argc, JS::V
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -916,7 +916,7 @@ bool js_objectInstance_execCommandObjectPushPull(JSContext *cx, unsigned argc, J
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -962,7 +962,7 @@ bool js_objectInstance_execCommandLayerMove(JSContext *cx, unsigned argc, JS::Va
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1008,7 +1008,7 @@ bool js_objectInstance_execCommandAttackSetting(JSContext *cx, unsigned argc, JS
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1054,7 +1054,7 @@ bool js_objectInstance_execCommandBulletFire(JSContext *cx, unsigned argc, JS::V
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1132,7 +1132,7 @@ bool js_objectInstance_execCommandDisappearObjectRecover(JSContext *cx, unsigned
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1211,7 +1211,7 @@ bool js_objectInstance_execCommandDisableObjectEnable(JSContext *cx, unsigned ar
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1257,7 +1257,7 @@ bool js_objectInstance_execCommandObjectFilterEffect(JSContext *cx, unsigned arg
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1304,7 +1304,7 @@ bool js_objectInstance_execCommandObjectFilterEffectRemove(JSContext *cx, unsign
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1352,7 +1352,7 @@ bool js_objectInstance_execCommandSceneEffect(JSContext *cx, unsigned argc, JS::
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1398,7 +1398,7 @@ bool js_objectInstance_execCommandSceneEffectRemove(JSContext *cx, unsigned argc
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1443,7 +1443,7 @@ bool js_objectInstance_execCommandSceneGravityChange(JSContext *cx, unsigned arg
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1489,7 +1489,7 @@ bool js_objectInstance_execCommandSceneRotateFlip(JSContext *cx, unsigned argc, 
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1535,7 +1535,7 @@ bool js_objectInstance_execCommandCameraAreaChange(JSContext *cx, unsigned argc,
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1581,7 +1581,7 @@ bool js_objectInstance_execCommandSoundPlay(JSContext *cx, unsigned argc, JS::Va
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1627,7 +1627,7 @@ bool js_objectInstance_execCommandSoundStop(JSContext *cx, unsigned argc, JS::Va
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1673,7 +1673,7 @@ bool js_objectInstance_execCommandSoundPositionRemember(JSContext *cx, unsigned 
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1719,7 +1719,7 @@ bool js_objectInstance_execCommandMessageShow(JSContext *cx, unsigned argc, JS::
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1765,7 +1765,7 @@ bool js_objectInstance_execCommandScrollMessageShow(JSContext *cx, unsigned argc
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1811,7 +1811,7 @@ bool js_objectInstance_execCommandEffectShow(JSContext *cx, unsigned argc, JS::V
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1857,7 +1857,7 @@ bool js_objectInstance_execCommandEffectRemove(JSContext *cx, unsigned argc, JS:
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1903,7 +1903,7 @@ bool js_objectInstance_execCommandParticleShow(JSContext *cx, unsigned argc, JS:
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 
@@ -1950,7 +1950,7 @@ bool js_objectInstance_execCommandParticleRemove(JSContext *cx, unsigned argc, J
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -1996,7 +1996,7 @@ bool js_objectInstance_execCommandMovieShow(JSContext *cx, unsigned argc, JS::Va
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2042,7 +2042,7 @@ bool js_objectInstance_execCommandImageShow(JSContext *cx, unsigned argc, JS::Va
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2088,7 +2088,7 @@ bool js_objectInstance_execCommandSwitchVariableChange(JSContext *cx, unsigned a
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2134,7 +2134,7 @@ bool js_objectInstance_execCommandSwitchVariableReset(JSContext *cx, unsigned ar
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2183,7 +2183,7 @@ bool js_objectInstance_execCommandGameSpeedChange(JSContext *cx, unsigned argc, 
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2229,7 +2229,7 @@ bool js_objectInstance_execCommandTimer(JSContext *cx, unsigned argc, JS::Value 
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2308,7 +2308,7 @@ bool js_objectInstance_execCommandDirectionMove(JSContext *cx, unsigned argc, JS
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2354,7 +2354,7 @@ bool js_objectInstance_execCommandForthBackMoveTurn(JSContext *cx, unsigned argc
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2400,7 +2400,7 @@ bool js_objectInstance_execCommandActionExec(JSContext *cx, unsigned argc, JS::V
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2446,7 +2446,7 @@ bool js_objectInstance_execCommandSceneShake(JSContext *cx, unsigned argc, JS::V
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2492,7 +2492,7 @@ bool js_objectInstance_execCommandLayerHide(JSContext *cx, unsigned argc, JS::Va
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2538,7 +2538,7 @@ bool js_objectInstance_execCommandLayerShow(JSContext *cx, unsigned argc, JS::Va
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2584,7 +2584,7 @@ bool js_objectInstance_execCommandLayerDisable(JSContext *cx, unsigned argc, JS:
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2630,7 +2630,7 @@ bool js_objectInstance_execCommandLayerEnable(JSContext *cx, unsigned argc, JS::
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2676,7 +2676,7 @@ bool js_objectInstance_execCommandMenuShow(JSContext *cx, unsigned argc, JS::Val
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2722,7 +2722,7 @@ bool js_objectInstance_execCommandMenuHide(JSContext *cx, unsigned argc, JS::Val
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2768,7 +2768,7 @@ bool js_objectInstance_execCommandDisplayDirectionMove(JSContext *cx, unsigned a
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2814,7 +2814,7 @@ bool js_objectInstance_execCommandFileLoad(JSContext *cx, unsigned argc, JS::Val
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2860,7 +2860,7 @@ bool js_objectInstance_execCommandObjectUnlock(JSContext *cx, unsigned argc, JS:
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2906,7 +2906,7 @@ bool js_objectInstance_execCommandResourceSetChange(JSContext *cx, unsigned argc
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2952,7 +2952,7 @@ bool js_objectInstance_execCommandDatabaseReflect(JSContext *cx, unsigned argc, 
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -2998,7 +2998,7 @@ bool js_objectInstance_isWallTouched(JSContext *cx, unsigned argc, JS::Value *vp
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3045,7 +3045,7 @@ bool js_objectInstance_isWallAhead(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3092,7 +3092,7 @@ bool js_objectInstance_isObjectWallTouched(JSContext *cx, unsigned argc, JS::Val
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3139,7 +3139,7 @@ bool js_objectInstance_isAttackAreaTouched(JSContext *cx, unsigned argc, JS::Val
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3186,7 +3186,7 @@ bool js_objectInstance_isAttackAreaNear(JSContext *cx, unsigned argc, JS::Value 
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3233,7 +3233,7 @@ bool js_objectInstance_isObjectNear(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3280,7 +3280,7 @@ bool js_objectInstance_isObjectFacingEachOther(JSContext *cx, unsigned argc, JS:
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3327,7 +3327,7 @@ bool js_objectInstance_isObjectFacing(JSContext *cx, unsigned argc, JS::Value *v
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3374,7 +3374,7 @@ bool js_objectInstance_isObjectFound(JSContext *cx, unsigned argc, JS::Value *vp
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3421,7 +3421,7 @@ bool js_objectInstance_isObjectFacingDirection(JSContext *cx, unsigned argc, JS:
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3468,7 +3468,7 @@ bool js_objectInstance_isHpZero(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3515,7 +3515,7 @@ bool js_objectInstance_isCameraOutOfRange(JSContext *cx, unsigned argc, JS::Valu
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3562,7 +3562,7 @@ bool js_objectInstance_isLocked(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3609,7 +3609,7 @@ bool js_objectInstance_isProbability(JSContext *cx, unsigned argc, JS::Value *vp
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3656,7 +3656,7 @@ bool js_objectInstance_isSwitchVariableChanged(JSContext *cx, unsigned argc, JS:
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3769,7 +3769,7 @@ bool js_objectInstance_isObjectActionChanged(JSContext *cx, unsigned argc, JS::V
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3816,7 +3816,7 @@ bool js_objectInstance_isSlopeTouched(JSContext *cx, unsigned argc, JS::Value *v
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3863,7 +3863,7 @@ bool js_objectInstance_isBuriedInWall(JSContext *cx, unsigned argc, JS::Value *v
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3909,7 +3909,7 @@ bool js_objectInstance_isObjectHit(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v2 = args[0];
+	auto v2 = args[0];
 #else
 #endif
 	if (!v2.isObject()) {
@@ -3983,7 +3983,7 @@ bool js_objectInstance_setValue(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 	bool value = 0;
 	{
-		auto &v2 = args[0];
+		auto v2 = args[0];
 		if (v2.isBoolean()) {
 			value = v2.toBoolean();
 		} else if (v2.isInt32()) {
@@ -4441,7 +4441,7 @@ bool js_switches_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -4554,7 +4554,7 @@ bool js_switches_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -4648,7 +4648,7 @@ bool js_switch_setValue(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (v2.isBoolean()) {
@@ -4743,7 +4743,7 @@ bool js_variables_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -4856,7 +4856,7 @@ bool js_variables_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -4952,7 +4952,7 @@ bool js_variable_setValue(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (v2.isDouble()) {

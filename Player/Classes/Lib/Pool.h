@@ -7,7 +7,7 @@
 #include <new>
 #include <vector>
 #include <mutex>
-#include "base/ccRef.h"
+#include "base/CCRef.h"
 #include <iostream>
 
 template<typename T, int NUM>

@@ -255,7 +255,7 @@ GameManager* GameManager::getInstance()
 #ifdef USE_RUNTIME
 		// 書き込み可能なディレクトリのパスを取得
 		auto writablePath = FileUtils::getInstance()->getWritablePath();
-#ifdef WIN32
+#if defined(WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 		// 実行ファイルが存在するディレクトリ名を取得
 		auto appPath = FileUtils::getInstance()->getApplicationPath();
 		appPath.pop_back();
@@ -6465,7 +6465,11 @@ void GameManager::actionLog(bool bPrintTime, const char *fmt, ...)
 			std::sprintf(timeStr, "[%d/%02d/%02d %02d:%02d:%02d]", 1900 + t_st->tm_year, t_st->tm_mon + 1, t_st->tm_mday, t_st->tm_hour, t_st->tm_min, t_st->tm_sec);
 			tmp = std::string(timeStr) + std::string(" ");
 		}
-		const int len = vsnprintf(NULL, 0, fmt, ap);
+		// Measure on a copy: vsnprintf consumes the va_list on x86-64 Linux.
+		va_list apLen;
+		va_copy(apLen, ap);
+		const int len = vsnprintf(NULL, 0, fmt, apLen);
+		va_end(apLen);
 		char *buf = (char *)malloc(len + 1);
 		buf[len] = 0;
 		vsnprintf(buf, len + 1, fmt, ap);
@@ -6506,7 +6510,11 @@ void GameManager::debugLog(const char *fmt, ...)
 		char timeStr[128];
 		std::sprintf(timeStr, "[%d/%02d/%02d %02d:%02d:%02d] ", 1900 + t_st->tm_year, t_st->tm_mon + 1, t_st->tm_mday, t_st->tm_hour, t_st->tm_min, t_st->tm_sec);
 
-		const int len = vsnprintf(NULL, 0, fmt, ap);
+		// Measure on a copy: vsnprintf consumes the va_list on x86-64 Linux.
+		va_list apLen;
+		va_copy(apLen, ap);
+		const int len = vsnprintf(NULL, 0, fmt, apLen);
+		va_end(apLen);
 		char *buf = (char *)malloc(len + 1);
 		buf[len] = 0;
 		vsnprintf(buf, len + 1, fmt, ap);
@@ -7362,6 +7370,7 @@ void GameManager::runCommand(const rapidjson::Value &json)
 				//プレビューモードを設定する
 				auto previewMode = params.GetString();
 #if 0
+				/* Kept as a comment: GCC rejects some of these characters even in skipped code.
 				"<プレビュータイプ>: ""scene""
 					汎用的なデバッグ表示・デバッグ機能が使用可能になる。
 					キャプチャー機能はOFFになる。
@@ -7373,6 +7382,7 @@ void GameManager::runCommand(const rapidjson::Value &json)
 					<プレビュータイプ> : ""object""
 					汎用的なデバッグ表示・デバッグ機能が使用不能になる。
 					アクションの切り替わり情報がエディターに通知されるようになる。"
+				*/
 #endif
 					this->setPreviewMode(cocos2d::String::create(previewMode));
 				auto message = cocos2d::String::createWithFormat("system feedbackInfo { \"previewMode\": \"%s\" }", previewMode);

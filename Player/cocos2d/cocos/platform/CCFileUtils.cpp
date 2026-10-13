@@ -1562,8 +1562,8 @@ bool FileUtils::removeFile(const std::string &path) const
 #else
 #ifdef USE_AGTK
 	//ファイルが存在するとキャッシュされていたらキャッシュをクリアする。（実際にファイルが削除されるか不明のためキャッシュのクリアに留める。）
-	if (s_fileExistCache.find(fullPath) != s_fileExistCache.end() && s_fileExistCache[fullPath]) {
-		clearFileExistCache(fullPath);
+	if (s_fileExistCache.find(path) != s_fileExistCache.end() && s_fileExistCache[path]) {
+		clearFileExistCache(path);
 	}
 #endif
 #endif

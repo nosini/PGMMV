@@ -9807,13 +9807,13 @@ void SceneLayer::createGroupCollisionDetections(bool isNeedCommon)
 				if ((hitGroupBit2 & groupBit1)) {
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-					auto &attackVert2 = object2->getPlayer()->getAttackVertListCache();
+					auto attackVert2 = object2->getPlayer()->getAttackVertListCache();
 #else
 #endif
 					if (attackVert2.size() > 0) {
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-						auto &hitVert1 = object1->getPlayer()->getHitVertListCache();
+						auto hitVert1 = object1->getPlayer()->getHitVertListCache();
 #else
 #endif
 						if (hitVert1.size() > 0) {
@@ -9906,13 +9906,13 @@ void SceneLayer::createGroupRoughWallCollisionDetections()
 				if ((collideGroupBit2 & groupBit1)) {
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-					auto &wallVert2 = object2->getPlayer()->getWallVertListCache();
+					auto wallVert2 = object2->getPlayer()->getWallVertListCache();
 #else
 #endif
 					if (wallVert2.size() > 0) {
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-						auto &wallVert1 = object1->getPlayer()->getWallVertListCache();
+						auto wallVert1 = object1->getPlayer()->getWallVertListCache();
 #else
 #endif
 						if (wallVert1.size() > 0) {

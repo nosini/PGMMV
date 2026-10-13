@@ -1321,7 +1321,7 @@ agtk::data::DirectionData *AnimationData::getDirectionData(int motionId, int dir
 	return motionData->getDirectionData(directionId);
 }
 
-cocos2d::Vec2 AnimationData::calcOriginPosition(cocos2d::Size& size)
+cocos2d::Vec2 AnimationData::calcOriginPosition(const cocos2d::Size& size)
 {
 	cocos2d::Vec2 origin;
 	switch (this->getOriginType()) {

@@ -10,7 +10,7 @@
 #ifdef USE_BG_PROJECT_LOAD
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_NX)
 #endif
-#include "Manager\ProjectLoadingManager.h"
+#include "Manager/ProjectLoadingManager.h"
 #include "DebugManager.h"
 #include "jsapi.h"
 #include "scripting/js-bindings/manual/ScriptingCore.h"

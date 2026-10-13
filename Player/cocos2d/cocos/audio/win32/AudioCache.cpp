@@ -27,7 +27,7 @@
 
 #include "platform/CCPlatformConfig.h"
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
 
 #include "audio/win32/AudioCache.h"
 #include <thread>

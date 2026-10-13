@@ -181,6 +181,9 @@ protected:
     int  _retinaFactor;  // Should be 1 or 2
 
     float _frameZoomFactor;
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    float getFramebufferScale() const;
+#endif
 
     GLFWwindow* _mainWindow;
     GLFWmonitor* _monitor;

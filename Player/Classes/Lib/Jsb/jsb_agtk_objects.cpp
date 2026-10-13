@@ -149,7 +149,7 @@ bool js_objects_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -221,7 +221,7 @@ bool js_objects_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -470,7 +470,7 @@ bool js_bullets_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	JS::RootedObject jsthis(cx, args.thisv().toObjectOrNull());
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -601,7 +601,7 @@ bool js_bullets_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -849,7 +849,7 @@ bool js_actions_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	JS::RootedObject jsthis(cx, args.thisv().toObjectOrNull());
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -969,7 +969,7 @@ bool js_actions_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -1139,7 +1139,7 @@ bool js_viewports_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	JS::RootedObject jsthis(cx, args.thisv().toObjectOrNull());
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -1264,7 +1264,7 @@ bool js_viewports_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -1436,7 +1436,7 @@ bool js_switches_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	JS::RootedObject jsthis(cx, args.thisv().toObjectOrNull());
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -1559,7 +1559,7 @@ bool js_switches_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -1718,7 +1718,7 @@ bool js_variables_get(JSContext *cx, unsigned argc, JS::Value *vp)
 	JS::RootedObject jsthis(cx, args.thisv().toObjectOrNull());
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-	auto &v = args[0];
+	auto v = args[0];
 #else
 #endif
 	if (!v.isNumber()) {
@@ -1838,7 +1838,7 @@ bool js_variables_getIdByName(JSContext *cx, unsigned argc, JS::Value *vp)
 	{
 // #AGTK-NX
 #if CC_TARGET_PLATFORM != CC_PLATFORM_NX
-		auto &v2 = args[0];
+		auto v2 = args[0];
 #else
 #endif
 		if (!v2.isString()) {
@@ -1912,7 +1912,7 @@ bool js_switch_setValue(JSContext *cx, unsigned argc, JS::Value *vp)
 	}
 	bool value = 0;
 	{
-		auto &v2 = args[0];
+		auto v2 = args[0];
 		if (v2.isBoolean()) {
 			value = v2.toBoolean();
 		} else if (v2.isInt32()) {

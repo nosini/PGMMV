@@ -3,7 +3,7 @@
 
 #include <list>
 #include "../../SS6Player.h"
-#include "../loader/ssloader.h"
+#include "../Loader/ssloader.h"
 #include "MersenneTwister.h"
 #include "ssplayer_cellmap.h"
 #include "ssplayer_PartState.h"

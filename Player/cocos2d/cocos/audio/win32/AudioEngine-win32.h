@@ -24,7 +24,7 @@
  ****************************************************************************/
 #include "platform/CCPlatformConfig.h"
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
 
 #ifndef __AUDIO_ENGINE_INL_H_
 #define __AUDIO_ENGINE_INL_H_
