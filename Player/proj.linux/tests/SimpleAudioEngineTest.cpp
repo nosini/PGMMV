@@ -1,6 +1,7 @@
 #include "audio/include/SimpleAudioEngine.h"
 #include "audio/include/AudioEngine.h"
 
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <map>
@@ -140,11 +141,35 @@ static void cleanup()
     SimpleAudioEngine::end();
 }
 
+static void volume()
+{
+    auto engine = SimpleAudioEngine::getInstance();
+    const auto quiet = engine->playEffect("quiet", true, 1, 0, 0.25f);
+    const auto loud = engine->playEffect("loud", true);
+    const int external = AudioEngine::play2d("main-player", true);
+    engine->pauseEffect(quiet);
+    engine->setEffectsVolume(0);
+    check(sounds.at(quiet).volume == 0 && sounds.at(loud).volume == 0, "active effects were not muted");
+    const auto muted = engine->playEffect("muted", true, 1, 0, 0.5f);
+    check(sounds.at(muted).volume == 0, "new effect ignored mute");
+    engine->setEffectsVolume(0.5f);
+    check(std::fabs(sounds.at(quiet).volume - 0.125f) < 0.001f
+        && sounds.at(loud).volume == 0.5f && sounds.at(muted).volume == 0.25f,
+        "unmuting did not preserve each effect's original gain");
+    check(sounds.at(quiet).state == AudioEngine::AudioState::PAUSED, "volume change resumed a paused effect");
+    check(sounds.at(external).volume == 1, "effects volume changed main-player audio");
+    finish(loud);
+    engine->setEffectsVolume(0.75f);
+    check(!sounds.count(loud), "volume change recreated a finished effect");
+    SimpleAudioEngine::end();
+}
+
 int main(int argc, char **argv)
 {
-    check(argc == 2, "expected failure or cleanup");
+    check(argc == 2, "expected failure, cleanup or volume");
     const std::string mode = argv[1];
     if (mode == "failure") failedEffect();
     else if (mode == "cleanup") cleanup();
+    else if (mode == "volume") volume();
     else check(false, "unknown test");
 }

@@ -8,7 +8,7 @@
 #include "audio/include/SimpleAudioEngine.h"
 #include "audio/include/AudioEngine.h"
 
-#include <set>
+#include <map>
 #include <string>
 
 using namespace CocosDenshion;
@@ -21,7 +21,8 @@ int s_musicId = AudioEngine::INVALID_AUDIO_ID;
 std::string s_musicPath;
 float s_musicVolume = 1.0f;
 float s_effectsVolume = 1.0f;
-std::set<unsigned int> s_effects;
+// Keep each effect's gain so volume changes also update sounds already playing.
+std::map<unsigned int, float> s_effects;
 
 } // namespace
 
@@ -129,6 +130,9 @@ float SimpleAudioEngine::getEffectsVolume()
 void SimpleAudioEngine::setEffectsVolume(float volume)
 {
     s_effectsVolume = volume;
+    for (const auto &effect : s_effects) {
+        AudioEngine::setVolume(static_cast<int>(effect.first), effect.second * volume);
+    }
 }
 
 unsigned int SimpleAudioEngine::playEffect(const char *filePath, bool loop, float pitch, float pan, float gain)
@@ -139,7 +143,7 @@ unsigned int SimpleAudioEngine::playEffect(const char *filePath, bool loop, floa
     if (id == AudioEngine::INVALID_AUDIO_ID) {
         return static_cast<unsigned int>(AudioEngine::INVALID_AUDIO_ID);
     }
-    s_effects.insert(static_cast<unsigned int>(id));
+    s_effects.emplace(static_cast<unsigned int>(id), gain);
     AudioEngine::setFinishCallback(id, [](int finishedId, const std::string &) {
         s_effects.erase(finishedId);
     });
@@ -155,8 +159,8 @@ void SimpleAudioEngine::pauseEffect(unsigned int soundId)
 
 void SimpleAudioEngine::pauseAllEffects()
 {
-    for (unsigned int id : s_effects) {
-        AudioEngine::pause(static_cast<int>(id));
+    for (const auto &effect : s_effects) {
+        AudioEngine::pause(static_cast<int>(effect.first));
     }
 }
 
@@ -169,8 +173,8 @@ void SimpleAudioEngine::resumeEffect(unsigned int soundId)
 
 void SimpleAudioEngine::resumeAllEffects()
 {
-    for (unsigned int id : s_effects) {
-        AudioEngine::resume(static_cast<int>(id));
+    for (const auto &effect : s_effects) {
+        AudioEngine::resume(static_cast<int>(effect.first));
     }
 }
 
@@ -185,10 +189,10 @@ void SimpleAudioEngine::stopAllEffects()
 {
     // stop() updates the backend synchronously and may finish other effects.
     // Detach the collection so their callbacks cannot invalidate this iteration.
-    std::set<unsigned int> effects;
+    std::map<unsigned int, float> effects;
     effects.swap(s_effects);
-    for (unsigned int id : effects) {
-        AudioEngine::stop(static_cast<int>(id));
+    for (const auto &effect : effects) {
+        AudioEngine::stop(static_cast<int>(effect.first));
     }
 }
 
