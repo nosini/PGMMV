@@ -1103,6 +1103,19 @@ Rect IMGUIGLViewImpl::getScissorRect() const
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
     // See setViewPortInPoints.
     const float _frameZoomFactor = this->_frameZoomFactor * getFramebufferScale();
+#ifdef USE_AGTK
+    // Render textures at the design resolution omit window zoom, framebuffer
+    // scaling and viewport offsets in setScissorInPoints. Invert that branch.
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    if (viewport[2] == _designResolutionSize.width &&
+        viewport[3] == _designResolutionSize.height) {
+        return Rect(params[0] / (_scaleX * _retinaFactor),
+                    params[1] / (_scaleY * _retinaFactor),
+                    params[2] / (_scaleX * _retinaFactor),
+                    params[3] / (_scaleY * _retinaFactor));
+    }
+#endif
 #endif
 // #AGTK-NX
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_NX)
