@@ -392,12 +392,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #else
 	FileUtils::getInstance()->addSearchPath("Resources");
 #endif
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-	// The player's own scripts, fonts and images for game folders without them, after the game.
-	if (!LinuxPlatform::getPlayerResourcePath().empty()) {
-		FileUtils::getInstance()->addSearchPath(LinuxPlatform::getPlayerResourcePath());
-	}
-#endif
 	auto index = projectFilePath.find_last_of('/');
 	auto jsonData = FileUtils::getInstance()->getStringFromFile(projectFilePath.substr(0, index) + "/info.json");
 	rapidjson::Document doc;
@@ -411,6 +405,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
 			&& doc["projectFolderSave"].GetBool()) {
 			GameManager::getInstance()->setProjectFolderSave(true);
 		}
+	}
+#endif
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+	// The player's own scripts, fonts and images for game folders without them, after the game.
+	// Runtime builds have replaced the FileUtils delegate above, so this comes after that.
+	if (!LinuxPlatform::getPlayerResourcePath().empty()) {
+		FileUtils::getInstance()->addSearchPath(LinuxPlatform::getPlayerResourcePath());
 	}
 #endif
 	GameManager *gm = GameManager::getInstance();
