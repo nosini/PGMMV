@@ -51,8 +51,9 @@ find_package(Threads REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(OpenSSL REQUIRED)
 find_package(Boost REQUIRED)
+# GLFW 3.4 selects X11 or Wayland at run time (glfwGetPlatform). Debian 12 ships 3.3.
 pkg_check_modules(SYSDEPS REQUIRED IMPORTED_TARGET
-    glfw3 glew freetype2 fontconfig gtk+-3.0 libpng libjpeg libtiff-4 libwebp zlib
+    glfw3>=3.4 glew freetype2 fontconfig gtk+-3.0 libpng libjpeg libtiff-4 libwebp zlib
     libcurl sqlite3 openal vorbisfile vorbis ogg libmpg123 x11)
 # cocos2d includes WebP's headers without the webp/ prefix. Newer libwebp adds
 # that directory to its Cflags, older versions (Debian 12) don't.
