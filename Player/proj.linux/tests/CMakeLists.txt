@@ -38,3 +38,4 @@ target_compile_definitions(pgmmv_audio_tests PRIVATE LINUX USE_AGTK)
 # AudioEngine.h relies on these from the player's precompiled header.
 target_precompile_headers(pgmmv_audio_tests PRIVATE <cstdint> <vector>)
 add_test(NAME simple_audio_failed_effect COMMAND pgmmv_audio_tests failure)
+add_test(NAME simple_audio_cleanup COMMAND pgmmv_audio_tests cleanup)

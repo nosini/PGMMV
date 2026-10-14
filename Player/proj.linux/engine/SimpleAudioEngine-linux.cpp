@@ -45,6 +45,12 @@ SimpleAudioEngine::SimpleAudioEngine()
 
 SimpleAudioEngine::~SimpleAudioEngine()
 {
+    // AudioEngine is shared with the player; only stop this wrapper's sounds.
+    stopBackgroundMusic();
+    stopAllEffects();
+    s_musicPath.clear();
+    s_musicVolume = 1.0f;
+    s_effectsVolume = 1.0f;
 }
 
 void SimpleAudioEngine::preloadBackgroundMusic(const char *filePath)
@@ -177,10 +183,13 @@ void SimpleAudioEngine::stopEffect(unsigned int soundId)
 
 void SimpleAudioEngine::stopAllEffects()
 {
-    for (unsigned int id : s_effects) {
+    // stop() updates the backend synchronously and may finish other effects.
+    // Detach the collection so their callbacks cannot invalidate this iteration.
+    std::set<unsigned int> effects;
+    effects.swap(s_effects);
+    for (unsigned int id : effects) {
         AudioEngine::stop(static_cast<int>(id));
     }
-    s_effects.clear();
 }
 
 void SimpleAudioEngine::preloadEffect(const char *filePath)

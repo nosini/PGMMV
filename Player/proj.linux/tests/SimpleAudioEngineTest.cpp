@@ -16,6 +16,9 @@ struct Sound {
 };
 static std::map<int, Sound> sounds;
 static int nextId = 0;
+// A stop can synchronously run the finish callbacks of other completed sounds
+// during OpenAL's update(). Exercise that while stopping the wrapper's effects.
+static int finishDuringStop = -1;
 
 static void check(bool ok, const char *message)
 {
@@ -33,9 +36,22 @@ int AudioEngine::play2d(const std::string &path, bool, float volume, float, floa
     sounds[id] = {volume, AudioState::PLAYING, {}};
     return id;
 }
+static void finish(int id)
+{
+    auto it = sounds.find(id);
+    if (it == sounds.end()) return;
+    const auto callback = it->second.finish;
+    sounds.erase(it);
+    if (callback) callback(id, "effect");
+}
 void AudioEngine::stop(int id)
 {
     sounds.erase(id);
+    if (finishDuringStop != INVALID_AUDIO_ID) {
+        const int finished = finishDuringStop;
+        finishDuringStop = INVALID_AUDIO_ID;
+        finish(finished);
+    }
 }
 void AudioEngine::pause(int id)
 {
@@ -98,10 +114,37 @@ static void failedEffect()
     SimpleAudioEngine::end();
 }
 
+static void cleanup()
+{
+    const int external = AudioEngine::play2d("main-player", true);
+    auto engine = SimpleAudioEngine::getInstance();
+    engine->setBackgroundMusicVolume(0.5f);
+    engine->setEffectsVolume(0.25f);
+    engine->playBackgroundMusic("music", true);
+    engine->playEffect("loop1", true);
+    engine->playEffect("loop2", true);
+    SimpleAudioEngine::end();
+    check(sounds.size() == 1 && sounds.count(external),
+        "end did not stop all owned sounds while preserving main-player audio");
+    SimpleAudioEngine::end(); // Repeated cleanup is safe.
+
+    engine = SimpleAudioEngine::getInstance();
+    check(!engine->isBackgroundMusicPlaying(), "new engine retained old music");
+    check(engine->getBackgroundMusicVolume() == 1 && engine->getEffectsVolume() == 1,
+        "new engine retained the old volume settings");
+    engine->playEffect("loop3", true);
+    const auto completed = engine->playEffect("one-shot");
+    finishDuringStop = completed;
+    engine->stopAllEffects();
+    check(sounds.size() == 1 && sounds.count(external), "stopAllEffects left owned sounds active");
+    SimpleAudioEngine::end();
+}
+
 int main(int argc, char **argv)
 {
-    check(argc == 2, "expected failure");
+    check(argc == 2, "expected failure or cleanup");
     const std::string mode = argv[1];
     if (mode == "failure") failedEffect();
+    else if (mode == "cleanup") cleanup();
     else check(false, "unknown test");
 }
