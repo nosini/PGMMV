@@ -21,7 +21,7 @@ int s_musicId = AudioEngine::INVALID_AUDIO_ID;
 std::string s_musicPath;
 float s_musicVolume = 1.0f;
 float s_effectsVolume = 1.0f;
-std::set<int> s_effects;
+std::set<unsigned int> s_effects;
 
 } // namespace
 
@@ -131,9 +131,9 @@ unsigned int SimpleAudioEngine::playEffect(const char *filePath, bool loop, floa
     (void)pan;
     int id = AudioEngine::play2d(filePath, loop, gain * s_effectsVolume);
     if (id == AudioEngine::INVALID_AUDIO_ID) {
-        return 0;
+        return static_cast<unsigned int>(AudioEngine::INVALID_AUDIO_ID);
     }
-    s_effects.insert(id);
+    s_effects.insert(static_cast<unsigned int>(id));
     AudioEngine::setFinishCallback(id, [](int finishedId, const std::string &) {
         s_effects.erase(finishedId);
     });
@@ -142,38 +142,43 @@ unsigned int SimpleAudioEngine::playEffect(const char *filePath, bool loop, floa
 
 void SimpleAudioEngine::pauseEffect(unsigned int soundId)
 {
-    AudioEngine::pause(static_cast<int>(soundId));
+    if (s_effects.count(soundId)) {
+        AudioEngine::pause(static_cast<int>(soundId));
+    }
 }
 
 void SimpleAudioEngine::pauseAllEffects()
 {
-    for (int id : s_effects) {
-        AudioEngine::pause(id);
+    for (unsigned int id : s_effects) {
+        AudioEngine::pause(static_cast<int>(id));
     }
 }
 
 void SimpleAudioEngine::resumeEffect(unsigned int soundId)
 {
-    AudioEngine::resume(static_cast<int>(soundId));
+    if (s_effects.count(soundId)) {
+        AudioEngine::resume(static_cast<int>(soundId));
+    }
 }
 
 void SimpleAudioEngine::resumeAllEffects()
 {
-    for (int id : s_effects) {
-        AudioEngine::resume(id);
+    for (unsigned int id : s_effects) {
+        AudioEngine::resume(static_cast<int>(id));
     }
 }
 
 void SimpleAudioEngine::stopEffect(unsigned int soundId)
 {
-    AudioEngine::stop(static_cast<int>(soundId));
-    s_effects.erase(static_cast<int>(soundId));
+    if (s_effects.erase(soundId)) {
+        AudioEngine::stop(static_cast<int>(soundId));
+    }
 }
 
 void SimpleAudioEngine::stopAllEffects()
 {
-    for (int id : s_effects) {
-        AudioEngine::stop(id);
+    for (unsigned int id : s_effects) {
+        AudioEngine::stop(static_cast<int>(id));
     }
     s_effects.clear();
 }

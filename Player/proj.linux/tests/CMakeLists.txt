@@ -32,3 +32,9 @@ add_executable(pgmmv_scissor_tests ScissorRectTest.cpp)
 target_include_directories(pgmmv_scissor_tests PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 add_test(NAME scissor_rect COMMAND pgmmv_scissor_tests)
 
+add_executable(pgmmv_audio_tests SimpleAudioEngineTest.cpp ../engine/SimpleAudioEngine-linux.cpp)
+target_include_directories(pgmmv_audio_tests PRIVATE "${PLAYER_DIR}/cocos2d/cocos")
+target_compile_definitions(pgmmv_audio_tests PRIVATE LINUX USE_AGTK)
+# AudioEngine.h relies on these from the player's precompiled header.
+target_precompile_headers(pgmmv_audio_tests PRIVATE <cstdint> <vector>)
+add_test(NAME simple_audio_failed_effect COMMAND pgmmv_audio_tests failure)
